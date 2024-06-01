@@ -1,0 +1,8 @@
+/dist/
+/target/
+/out/
+/taesc/
+/ota/
+/data/mirrors/*
+nginx.txt
+just_extract.py
