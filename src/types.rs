@@ -3,8 +3,15 @@ use std::collections::HashMap;
 
 #[derive(Clone, Debug, PartialEq)]
 pub struct EscDataCtx {
+    pub meta: Meta,
     pub units: HashMap<String, Unit>,
     pub weapons: HashMap<String, Weapon>,
+}
+
+#[derive(Default, Serialize, Deserialize, Debug, Clone, PartialEq)]
+#[serde(default)]
+pub struct Meta {
+    pub updated_at: i64,
 }
 
 #[derive(Default, Serialize, Deserialize, Debug, Clone, PartialEq)]

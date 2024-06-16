@@ -32,24 +32,39 @@ pub fn unit_page(props: &UnitPageProps) -> Html {
 
         html! {
             <>
-                <h1>{"("}{ unit.side.clone() }{") "}{ unit.name.clone() }</h1>
-                <img width=200 height=200 src={img_url}/>
-                <p>{ unit.description.clone() }</p>
-                <p>{ format!("Costs {} metal", format_i64(unit.build_cost_metal)) }</p>
-                <p>{ format!("Costs {} energy", format_i64(unit.build_cost_energy)) }</p>
-                if unit.energy_make != 0.0 {
-                    <p>{ format!("Energy make: {}", format_f64(unit.energy_make)) }</p>
+                <div class="unit-info">
+                    <div>
+                        <h1>{"("}{ unit.side.clone() }{") "}{ unit.name.clone() }</h1>
+                        <p>{ unit.description.clone() }</p>
+                        <img width=200 height=200 src={img_url}/>
+                        <p>{ "Summon with: "}<code>{ "+" }{ unit.unit_name.clone() }</code></p>
+                    </div>
+                    <div>
+                        <p>{ format!("Costs {} metal", format_i64(unit.build_cost_metal)) }</p>
+                        <p>{ format!("Costs {} energy", format_i64(unit.build_cost_energy)) }</p>
+                        if unit.energy_make != 0.0 {
+                            <p>{ format!("Energy make: {}", format_f64(unit.energy_make)) }</p>
+                        }
+                        <p>{ format!("Build time: {}", format_i64(unit.build_time)) }</p>
+                        <p>{ format!("Health: {}", format_i64(unit.max_damage)) }</p>
+                        if unit.damage_modifier != 0.0 {
+                            <p>{ format!("Effective health (when armoured): {}", format_f64(unit.max_damage as f64 / unit.damage_modifier)) }</p>
+                            <p>{ format!("Armour damage modifier: {}", format_f64(unit.damage_modifier)) }</p>
+                        }
+                        <p>{ format!("Footprint: {} by {}", unit.footprint_x, unit.footprint_z) }</p>
+                        <p>{ format!("Sight distance: {}", unit.sight_distance) }</p>
+                        <p>{ format!("Radar distance: {}", unit.radar_distance) }</p>
+                        <p>{ format!("Radar Jam distance: {}", unit.radar_distance_jam) }</p>
+                    </div>
+                </div>
+
+                if unit.can_move == 1 {
+                    <h2>{"Movement"}</h2>
+                    <p>{"Max velocity: "}{format_f64(unit.max_velocity)}</p>
+                    <p>{"Acceleration: "}{format_f64(unit.acceleration)}</p>
+                    <p>{"Turn rate: "}{format_i64(unit.turn_rate)}</p>
+                    <p>{"Brake rate: "}{format_f64(unit.brake_rate)}</p>
                 }
-                <p>{ format!("Build time: {}", format_i64(unit.build_time)) }</p>
-                <p>{ format!("Health: {}", format_i64(unit.max_damage)) }</p>
-                if unit.damage_modifier != 0.0 {
-                    <p>{ format!("Effective health (when armoured): {}", format_f64(unit.max_damage as f64 / unit.damage_modifier)) }</p>
-                    <p>{ format!("Armour damage modifier: {}", format_f64(unit.damage_modifier)) }</p>
-                }
-                <p>{ format!("Footprint: {} by {}", unit.footprint_x, unit.footprint_z) }</p>
-                <p>{ format!("Sight distance: {}", unit.sight_distance) }</p>
-                <p>{ format!("Radar distance: {}", unit.radar_distance) }</p>
-                <p>{ format!("Radar Jam distance: {}", unit.radar_distance_jam) }</p>
 
                 if unit.weapon_1.clone().or(unit.weapon_2.clone()).or(unit.weapon_3.clone()).is_some() {
                     <h2>{"Weapons"}</h2>

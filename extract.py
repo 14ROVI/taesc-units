@@ -6,6 +6,9 @@ import stat
 import re
 import json
 import platform
+import time
+from chardet import detect
+import ta_file_decoder
 
 ESC_FILES = [
     "TAESC.gp3",
@@ -26,6 +29,7 @@ UNIT_PICS_DIR = "./data/unit_icons/"
 UNIT_DATA_PATH = "./data/units.json"
 WEAPON_DATA_PATH = "./data/weapons.json"
 GUIS_DATA_PATH = "./data/guis.json"
+META_DATA_PATH = "./data/meta.json"
 
 CLASS_REGEX = re.compile(r"\[(\w+)\]")
 DATA_REGEX = re.compile(r"(\w*)=([^;]*);")
@@ -46,24 +50,63 @@ EXCLUDE_WEAPONS = {}
 UNIT_DATA = {}
 WEAPON_DATA = {}
 GUI_DATA = {}
+META_DATA = {}
 
 
 def run_hpi_extract(output_folder, input_file):
     if platform.system().lower() == "windows":
         subprocess.run(["./hpiextract.exe", output_folder, input_file], stdout=subprocess.DEVNULL)
     else:
-        subprocess.run(["hpiextract", output_folder, input_file], stdout=subprocess.DEVNULL)
+        subprocess.run(["./hpiextract", output_folder, input_file], stdout=subprocess.DEVNULL)
 
 
 def change_extension(file_path, new_extension):
     return ".".join(file_path.split(".")[:-1]) + "." + new_extension
 
 
+# def fbi_data(file_path):
+#     data = {}
+    
+#     with open(file_path, "rb") as f:
+#         rawdata = f.read()
+#         encoding = detect(rawdata)["encoding"]
+#         text = rawdata.decode(encoding=encoding)
+#         print(file_path)
+#         data = ta_file_decoder.decode(text)
+
+#         data = {
+#             k.lower(): v for k, v in data["UNITINFO"].items()
+#         }
+
+    
+#     return data
+
+
+# def tdf_data(file_path):
+#     data = {}
+    
+#     with open(file_path, "rb") as f:
+#         rawdata = f.read()
+#         encoding = detect(rawdata)["encoding"]
+#         text = rawdata.decode(encoding=encoding)
+#         data = ta_file_decoder.decode(text)
+
+#         for weapon_name in data:
+#             data[weapon_name] = {
+#                 k.lower(): v for k, v in data[weapon_name].items()
+#             }
+    
+#     return data
+
 def fbi_data(file_path):
     data = {}
     
-    with open(file_path, "r") as f:
-        for line in f.readlines():
+    with open(file_path, "rb") as f:
+        rawdata = f.read()
+        encoding = detect(rawdata)["encoding"]
+        text = rawdata.decode(encoding=encoding)
+        
+        for line in text.splitlines():
             line = line.strip()
             
             if line.startswith("//"):
@@ -95,11 +138,15 @@ def fbi_data(file_path):
 def tdf_data(file_path):
     data = {}
     
-    with open(file_path, "r") as f:
+    with open(file_path, "rb") as f:
+        rawdata = f.read()
+        encoding = detect(rawdata)["encoding"]
+        text = rawdata.decode(encoding=encoding)
+
         current_weapon = None
         level = 0
         
-        for line in f.readlines():
+        for line in text.splitlines():
             line = line.strip()
             
             if line.startswith("//"):
@@ -152,34 +199,35 @@ def tdf_data(file_path):
 def gui_data(file_path):
     data = []
     
-    with open(file_path, "r") as f:
-        level = 0
-        current_name = None
+    with open(file_path, "rb") as f:
+        rawdata = f.read()
+        encoding = detect(rawdata)["encoding"]
         
-        for line in f.readlines():
-            line = line.strip()
+        text = rawdata.decode(encoding=encoding)
+        gui_data = ta_file_decoder.decode(text)
+        
+        for gadget in gui_data.values():
+            name = gadget["COMMON"]["name"]
+            width = gadget["COMMON"]["width"]
+            height = gadget["COMMON"]["height"]
+            commonattribs = gadget["COMMON"]["commonattribs"]
+            attribs = gadget["COMMON"]["attribs"]
+            greyed_out = gadget.get("grayedout", 0)
             
-            if line.startswith("//"):
+            if greyed_out:
                 continue
             
-            if line == "{":
-                level += 1
-                continue
+            add = False
             
-            if line == "}":
-                level -= 1
-                continue
-            
-            match = DATA_REGEX.match(line)
-            if match:
-                key = match.group(1)
-                value = match.group(2)
+            if width == height and (width == 64 or width == 128):
+                add = True
+            elif commonattribs == 4:
+                add = True
+            elif attribs == 32:
+                add = True
                 
-                if key == "name":
-                    current_name = value
-                elif key == "commonattribs" and value == "4":
-                    data.append(current_name)
-                    
+            if add:
+                data.append(name)
     
     return data
 
@@ -198,8 +246,7 @@ shutil.rmtree(UNIT_PICS_DIR, ignore_errors=True)
 os.makedirs(UNIT_PICS_DIR)
 
 for file in ESC_FILES:
-    path.join(ESC_GIT_DIR, file)
-    run_hpi_extract(EXTRACT_DIR, )
+    run_hpi_extract(EXTRACT_DIR, path.join(ESC_GIT_DIR, file))
     
     if path.exists(EXTRACT_UNIT_PICS_DIR):
         for pic in os.listdir(EXTRACT_UNIT_PICS_DIR):
@@ -229,15 +276,15 @@ for file in ESC_FILES:
             gui_page = gui_name[-1]
             gui_name = gui_name[:-1]
             
-            gui_path = path.join(EXTRACT_GUIS_DIR, gui)
-            try:
-                data = gui_data(gui_path)
-                if gui_name in GUI_DATA:
-                    GUI_DATA[gui_name][int(gui_page)] = data
-                elif len(data) > 0:
-                    GUI_DATA[gui_name] = {int(gui_page): data}
-            except:
+            if not gui_page.isnumeric():
                 continue
+            
+            gui_path = path.join(EXTRACT_GUIS_DIR, gui)
+            data = gui_data(gui_path)
+            if gui_name in GUI_DATA:
+                GUI_DATA[gui_name][int(gui_page)] = data
+            elif len(data) > 0:
+                GUI_DATA[gui_name] = {int(gui_page): data}
             
     
     shutil.rmtree(EXTRACT_DIR, ignore_errors=True)
@@ -357,8 +404,6 @@ for unit_name in UNIT_DATA:
         
                 
     unit["roviclass"] = rovi_class
-        
-        
 
 
 with open(UNIT_DATA_PATH, "w") as f:
@@ -366,6 +411,12 @@ with open(UNIT_DATA_PATH, "w") as f:
 
 with open(WEAPON_DATA_PATH, "w") as f:
     json.dump(WEAPON_DATA, f, indent=4)
+    
+with open(META_DATA_PATH, "w") as f:
+    META_DATA = {
+        "updated_at": int(time.time()),
+    }
+    json.dump(META_DATA, f, indent=4)
 
 def on_rm_error(func, path, exc_info):
     os.chmod(path, stat.S_IWRITE)

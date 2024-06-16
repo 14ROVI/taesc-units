@@ -64,7 +64,10 @@
         "activatewhenbuilt": 0,
         "immunetoparalyzer": 1,
         "amphibious": 1,
-        "builtby": [],
+        "builtby": [
+            "ARMMLV",
+            "CORMLV"
+        ],
         "builds": [],
         "tier": 1,
         "roviclass": "BUILDING"
@@ -134,7 +137,12 @@
         "activatewhenbuilt": 0,
         "immunetoparalyzer": 1,
         "amphibious": 1,
-        "builtby": [],
+        "builtby": [
+            "ARMMLV",
+            "CORMLV",
+            "ARMMLS",
+            "CORMLS"
+        ],
         "builds": [],
         "tier": 1,
         "roviclass": "BUILDING"
@@ -212,7 +220,12 @@
         "activatewhenbuilt": 0,
         "immunetoparalyzer": 1,
         "amphibious": 1,
-        "builtby": [],
+        "builtby": [
+            "ARMMLV",
+            "CORMLV",
+            "ARMMLS",
+            "CORMLS"
+        ],
         "builds": [],
         "tier": 1,
         "roviclass": "BUILDING"
@@ -273,7 +286,10 @@
         "ai_weight": "weight ALL_MINE4 0",
         "ai_limit": "limit ALL_MINE4 0",
         "immunetoparalyzer": 1,
-        "builtby": [],
+        "builtby": [
+            "ARMMLV",
+            "CORMLV"
+        ],
         "builds": [],
         "tier": 1,
         "roviclass": "BUILDING"
@@ -343,7 +359,10 @@
         "onoffable": 1,
         "activatewhenbuilt": 0,
         "immunetoparalyzer": 1,
-        "builtby": [],
+        "builtby": [
+            "ARMSPY",
+            "CORSPY"
+        ],
         "builds": [],
         "tier": 1,
         "roviclass": "BUILDING"
@@ -1294,7 +1313,9 @@
             "ARMACH",
             "ARMACSA"
         ],
-        "builds": [],
+        "builds": [
+            "ARMMAKEANTI"
+        ],
         "tier": 2,
         "roviclass": "BUILDING"
     },
@@ -2966,7 +2987,9 @@
         "builtby": [
             "ARMASY"
         ],
-        "builds": [],
+        "builds": [
+            "ARMMAKEANTI"
+        ],
         "tier": 2,
         "roviclass": "SHIP"
     },
@@ -3313,6 +3336,7 @@
             "ARMFRAD",
             "ARMPLAT",
             "ARMTL",
+            "ARMFHP",
             "ARMASPEN"
         ],
         "tier": 0,
@@ -3947,6 +3971,7 @@
             "ARMFRAD",
             "ARMPLAT",
             "ARMTL",
+            "ARMFHP",
             "ARMASPEN"
         ],
         "tier": 2,
@@ -4094,7 +4119,9 @@
             "ARMACH",
             "ARMACSA"
         ],
-        "builds": [],
+        "builds": [
+            "EMPMAKENUKE"
+        ],
         "tier": 2,
         "roviclass": "BUILDING"
     },
@@ -7134,7 +7161,12 @@
         "builtby": [
             "ARMVP"
         ],
-        "builds": [],
+        "builds": [
+            "ALL_MINE1",
+            "ALL_MINE4",
+            "ALL_MINE2",
+            "ALL_MINE3"
+        ],
         "tier": 1,
         "roviclass": "VEHICLE"
     },
@@ -8409,7 +8441,9 @@
         "builtby": [
             "ARMAVP"
         ],
-        "builds": [],
+        "builds": [
+            "ARMMAKEANTI"
+        ],
         "tier": 2,
         "roviclass": "VEHICLE"
     },
@@ -8744,7 +8778,9 @@
             "ARMECSA",
             "ARMECV"
         ],
-        "builds": [],
+        "builds": [
+            "ARMMAKENUKE"
+        ],
         "tier": 3,
         "roviclass": "BUILDING"
     },
@@ -9249,7 +9285,9 @@
             "ARMALAB",
             "ARMASPEN"
         ],
-        "builds": [],
+        "builds": [
+            "ALL_MINE5"
+        ],
         "tier": 2,
         "roviclass": "KBOT"
     },
@@ -13169,7 +13207,9 @@
         "builtby": [
             "CORASY"
         ],
-        "builds": [],
+        "builds": [
+            "CORMAKEANTI"
+        ],
         "tier": 2,
         "roviclass": "SHIP"
     },
@@ -15037,7 +15077,9 @@
             "CORACH",
             "CORACSA"
         ],
-        "builds": [],
+        "builds": [
+            "CORMAKEANTI"
+        ],
         "tier": 2,
         "roviclass": "BUILDING"
     },
@@ -16656,7 +16698,9 @@
         "builtby": [
             "CORAVP"
         ],
-        "builds": [],
+        "builds": [
+            "CORMAKEANTI"
+        ],
         "tier": 2,
         "roviclass": "VEHICLE"
     },
@@ -17150,7 +17194,12 @@
         "builtby": [
             "CORVP"
         ],
-        "builds": [],
+        "builds": [
+            "ALL_MINE1",
+            "ALL_MINE4",
+            "ALL_MINE2",
+            "ALL_MINE3"
+        ],
         "tier": 1,
         "roviclass": "VEHICLE"
     },
@@ -19016,7 +19065,9 @@
             "CORECSA",
             "CORECV"
         ],
-        "builds": [],
+        "builds": [
+            "CORMAKENUKE"
+        ],
         "tier": 3,
         "roviclass": "BUILDING"
     },
@@ -19521,7 +19572,9 @@
             "CORALAB",
             "CORASPEN"
         ],
-        "builds": [],
+        "builds": [
+            "ALL_MINE5"
+        ],
         "tier": 2,
         "roviclass": "KBOT"
     },
@@ -20571,7 +20624,9 @@
             "CORACH",
             "CORACSA"
         ],
-        "builds": [],
+        "builds": [
+            "TRONMAKENUKE"
+        ],
         "tier": 2,
         "roviclass": "BUILDING"
     },
@@ -21799,7 +21854,7 @@
         ],
         "builds": [],
         "tier": 2,
-        "roviclass": "UNBUILDABLE"
+        "roviclass": "UPGRADE"
     },
     "ARMAAA": {
         "unitname": "ARMAAA",
@@ -22650,7 +22705,7 @@
         ],
         "builds": [],
         "tier": 2,
-        "roviclass": "UNBUILDABLE"
+        "roviclass": "UPGRADE"
     },
     "ARMBRTHA_UPG": {
         "unitname": "ARMBRTHA_UPG",
@@ -22720,7 +22775,7 @@
         ],
         "builds": [],
         "tier": 3,
-        "roviclass": "UNBUILDABLE"
+        "roviclass": "UPGRADE"
     },
     "ARMDPL": {
         "unitname": "ARMDPL",
@@ -23059,8 +23114,10 @@
         "builtby": [
             "ARMACSUB",
             "ARMCH",
+            "ARMCOM",
             "ARMCS",
             "ARMCSA",
+            "ARMDECOM",
             "ARMACH",
             "ARMACSA",
             "ARMECS",
@@ -23363,7 +23420,7 @@
         ],
         "builds": [],
         "tier": 3,
-        "roviclass": "UNBUILDABLE"
+        "roviclass": "UPGRADE"
     },
     "ARMFWIN": {
         "unitname": "ARMFWIN",
@@ -23571,7 +23628,7 @@
         ],
         "builds": [],
         "tier": 2,
-        "roviclass": "UNBUILDABLE"
+        "roviclass": "UPGRADE"
     },
     "ARMGUARD_UPG": {
         "unitname": "ARMGUARD_UPG",
@@ -23641,7 +23698,7 @@
         ],
         "builds": [],
         "tier": 2,
-        "roviclass": "UNBUILDABLE"
+        "roviclass": "UPGRADE"
     },
     "ARMHANNI": {
         "unitname": "ARMHANNI",
@@ -24187,7 +24244,7 @@
         ],
         "builds": [],
         "tier": 2,
-        "roviclass": "UNBUILDABLE"
+        "roviclass": "UPGRADE"
     },
     "ARMHSTUN": {
         "unitname": "ARMHSTUN",
@@ -24714,7 +24771,10 @@
         "builtby": [
             "ARMSY"
         ],
-        "builds": [],
+        "builds": [
+            "ALL_MINE2",
+            "ALL_MINE3"
+        ],
         "tier": 1,
         "roviclass": "SHIP"
     },
@@ -25910,7 +25970,8 @@
             "CORASON",
             "CORPLAT",
             "CORATL",
-            "CORFHP"
+            "CORFHP",
+            "CORFEHP"
         ],
         "tier": 2,
         "roviclass": "HOVERCRAFT"
@@ -26002,6 +26063,7 @@
             "CORPLAT",
             "CORATL",
             "CORFHP",
+            "COREPLAT",
             "CORFUS",
             "CORGEN",
             "CORSES",
@@ -26349,7 +26411,7 @@
         ],
         "builds": [],
         "tier": 2,
-        "roviclass": "UNBUILDABLE"
+        "roviclass": "UPGRADE"
     },
     "CORDPL": {
         "unitname": "CORDPL",
@@ -27073,7 +27135,7 @@
         ],
         "builds": [],
         "tier": 3,
-        "roviclass": "UNBUILDABLE"
+        "roviclass": "UPGRADE"
     },
     "CORFWIN": {
         "unitname": "CORFWIN",
@@ -27281,7 +27343,7 @@
         ],
         "builds": [],
         "tier": 2,
-        "roviclass": "UNBUILDABLE"
+        "roviclass": "UPGRADE"
     },
     "CORHARL": {
         "unitname": "CORHARL",
@@ -27921,7 +27983,7 @@
         ],
         "builds": [],
         "tier": 2,
-        "roviclass": "UNBUILDABLE"
+        "roviclass": "UPGRADE"
     },
     "CORHTANK": {
         "unitname": "CORHTANK",
@@ -28071,7 +28133,7 @@
         ],
         "builds": [],
         "tier": 3,
-        "roviclass": "UNBUILDABLE"
+        "roviclass": "UPGRADE"
     },
     "CORJAMMER": {
         "unitname": "CORJAMMER",
@@ -28436,7 +28498,10 @@
         "builtby": [
             "CORSY"
         ],
-        "builds": [],
+        "builds": [
+            "ALL_MINE2",
+            "ALL_MINE3"
+        ],
         "tier": 1,
         "roviclass": "SHIP"
     },
@@ -28757,7 +28822,7 @@
         ],
         "builds": [],
         "tier": 2,
-        "roviclass": "UNBUILDABLE"
+        "roviclass": "UPGRADE"
     },
     "CORSC": {
         "unitname": "CORSC",
@@ -29355,7 +29420,7 @@
         ],
         "builds": [],
         "tier": 2,
-        "roviclass": "UNBUILDABLE"
+        "roviclass": "UPGRADE"
     },
     "ARMAACRUS": {
         "unitname": "ARMAACRUS",
@@ -33288,7 +33353,9 @@
         "builtby": [
             "ARMESY"
         ],
-        "builds": [],
+        "builds": [
+            "EMPMAKENUKE"
+        ],
         "tier": 3,
         "roviclass": "SHIP"
     },
@@ -33506,7 +33573,7 @@
         ],
         "builds": [],
         "tier": 4,
-        "roviclass": "UNBUILDABLE"
+        "roviclass": "UPGRADE"
     },
     "ARMSGS": {
         "unitname": "ARMSGS",
@@ -33725,7 +33792,7 @@
         ],
         "builds": [],
         "tier": 3,
-        "roviclass": "UNBUILDABLE"
+        "roviclass": "UPGRADE"
     },
     "ARMSIEGE": {
         "unitname": "ARMSIEGE",
@@ -36159,6 +36226,7 @@
         "energymake": 40,
         "metalmake": 2,
         "builtby": [
+            "CORACSA",
             "CORECA",
             "CORECSA"
         ],
@@ -36552,6 +36620,7 @@
         "energymake": 40,
         "metalmake": 2,
         "builtby": [
+            "CORACH",
             "CORECH"
         ],
         "builds": [
@@ -38166,7 +38235,9 @@
         "builtby": [
             "CORESY"
         ],
-        "builds": [],
+        "builds": [
+            "TRONMAKENUKE"
+        ],
         "tier": 3,
         "roviclass": "SHIP"
     },
@@ -38300,7 +38371,7 @@
         ],
         "builds": [],
         "tier": 4,
-        "roviclass": "UNBUILDABLE"
+        "roviclass": "UPGRADE"
     },
     "CORSGS": {
         "unitname": "CORSGS",
@@ -39633,7 +39704,7 @@
         ],
         "builds": [],
         "tier": 3,
-        "roviclass": "UNBUILDABLE"
+        "roviclass": "UPGRADE"
     },
     "ALL_OMNI": {
         "unitname": "ALL_OMNI",
@@ -39708,7 +39779,7 @@
         ],
         "builds": [],
         "tier": 4,
-        "roviclass": "UNBUILDABLE"
+        "roviclass": "UPGRADE"
     },
     "ARMFFLAG": {
         "unitname": "ARMFFLAG",
@@ -40868,7 +40939,9 @@
         "builtby": [
             "ARMSSY"
         ],
-        "builds": [],
+        "builds": [
+            "ARMMAKENUKE"
+        ],
         "tier": 4,
         "roviclass": "SHIP"
     },
@@ -42426,7 +42499,9 @@
         "builtby": [
             "CORSSY"
         ],
-        "builds": [],
+        "builds": [
+            "CORMAKENUKE"
+        ],
         "tier": 4,
         "roviclass": "SHIP"
     },

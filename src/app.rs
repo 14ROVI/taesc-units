@@ -1,10 +1,12 @@
 use std::collections::HashMap;
 
 use gloo_net::http::Request;
+use js_sys::wasm_bindgen::JsValue;
+use js_sys::Date;
 use yew::prelude::*;
 use yew_router::prelude::*;
 
-use crate::types::{EscDataCtx, Unit, Weapon};
+use crate::types::{EscDataCtx, Meta, Unit, Weapon};
 use crate::unit::UnitPage;
 use crate::units::Units;
 
@@ -92,16 +94,29 @@ fn switch(routes: Route) -> Html {
 #[function_component(App)]
 pub fn app() -> Html {
     let ctx = use_state(|| EscDataCtx {
+        meta: Meta::default(),
         units: HashMap::new(),
         weapons: HashMap::new(),
     });
+    let created_at = use_state(|| Date::new(&JsValue::from(0)));
 
     {
         let ctx = ctx.clone();
+        let created_at = created_at.clone();
 
         use_effect_with((), move |_| {
             let ctx = ctx.clone();
+            let created_at = created_at.clone();
+
             wasm_bindgen_futures::spawn_local(async move {
+                let meta: Meta = Request::get("/data/meta.json")
+                    .send()
+                    .await
+                    .unwrap()
+                    .json()
+                    .await
+                    .unwrap();
+
                 let units: HashMap<String, Unit> = Request::get("/data/units.json")
                     .send()
                     .await
@@ -118,12 +133,20 @@ pub fn app() -> Html {
                     .await
                     .unwrap();
 
-                ctx.set(EscDataCtx { units, weapons });
+                created_at.set(Date::new(&JsValue::from((meta.updated_at * 1000) as f64)));
+
+                ctx.set(EscDataCtx {
+                    meta,
+                    units,
+                    weapons,
+                });
             });
 
             || ()
         });
     }
+
+    // let created_at = Date::new(&JsValue::from(*ctx.meta.updated_at));
 
     html! {
         <ContextProvider<EscDataCtx> context={(*ctx).clone()}>
@@ -132,6 +155,7 @@ pub fn app() -> Html {
                 <main>
                     <Switch<Route> render={switch} />
                 </main>
+                <p>{ "Last updated at: " }{ created_at.to_iso_string() }</p>
             </BrowserRouter>
         </ContextProvider<EscDataCtx>>
     }
