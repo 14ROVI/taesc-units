@@ -100,9 +100,12 @@ pub fn unit_page(props: &UnitPageProps) -> Html {
                     <div class="unit-class">
                     {
                         unit.builds.iter().map(|unit_name| {
-                            let builder = units.get(unit_name).unwrap().clone();
-                            html! {
-                                <UnitOverview key={unit_name.as_str()} unit={builder}/>
+                            if let Some(builder) = units.get(unit_name) {
+                                html! {
+                                    <UnitOverview key={unit_name.as_str()} unit={builder.clone()}/>
+                                }
+                            } else {
+                                html! { <></> }
                             }
                         }).collect::<Html>()
                     }

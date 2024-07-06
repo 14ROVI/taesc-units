@@ -7,3 +7,4 @@
 nginx.txt
 just_extract.py
 /data/
+/__pycache__/
