@@ -9,6 +9,7 @@ import platform
 import time
 from chardet import detect
 import ta_file_decoder
+import env
 
 ESC_FILE_EXTENSIONS = (".gp3", ".ufo")
 ESC_FILES = [
@@ -73,9 +74,8 @@ def fbi_data(file_path):
         encoding = detect(rawdata)["encoding"]
         if encoding is None: return data
         text = rawdata.decode(encoding=encoding)
-        print(file_path)
         data = ta_file_decoder.decode(text)
-
+        
         data = {
             k.lower(): v for k, v in data["UNITINFO"].items()
         }
@@ -89,7 +89,7 @@ def tdf_data(file_path):
     
     with open(file_path, "rb") as f:
         rawdata = f.read()
-        encoding = detect(rawdata)["encoding"]
+        encoding = detect(rawdata)["encoding"] or "utf-8"
         if encoding is None: return data
         text = rawdata.decode(encoding=encoding)
         data = ta_file_decoder.decode(text)
@@ -107,6 +107,7 @@ def gui_data(file_path):
     with open(file_path, "rb") as f:
         rawdata = f.read()
         encoding = detect(rawdata)["encoding"]
+        if encoding is None: return data
         
         text = rawdata.decode(encoding=encoding)
         gui_data = ta_file_decoder.decode(text)

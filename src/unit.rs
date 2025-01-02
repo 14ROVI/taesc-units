@@ -55,6 +55,12 @@ pub fn unit_page(props: &UnitPageProps) -> Html {
                         <p>{ format!("Sight distance: {}", unit.sight_distance) }</p>
                         <p>{ format!("Radar distance: {}", unit.radar_distance) }</p>
                         <p>{ format!("Radar Jam distance: {}", unit.radar_distance_jam) }</p>
+                        if unit.worker_time > 0 {
+                            <p>{ format!("Build power: {}", unit.worker_time) }</p>
+                        }
+                        if unit.max_slope > 0 {
+                            <p>{ format!("Max slope: {}", unit.max_slope) }</p>
+                        }
                     </div>
                 </div>
 
