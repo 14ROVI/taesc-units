@@ -28,7 +28,7 @@ pub fn unit_page(props: &UnitPageProps) -> Html {
     if let Some(unit) = unit {
         set_title(format!("TA:ESC Units | {}", unit.name).as_str());
 
-        let img_url = format!("/data/unit_icons/{}.webp", unit.object_name.clone());
+        let img_url = format!("/data/unit_icons/{}.webp", unit.unit_name.clone());
 
         html! {
             <>
