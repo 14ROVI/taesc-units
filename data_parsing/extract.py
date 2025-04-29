@@ -2,13 +2,13 @@ import subprocess
 import os
 from os import path
 import shutil
-import stat
 import re
 import json
 import platform
 import time
 from chardet import detect
 import ta_file_decoder
+import cob_interpreter
 
 ESC_FILE_EXTENSIONS = (".gp3", ".ufo")
 ESC_FILES = [
@@ -25,6 +25,7 @@ EXTRACT_DIR = "./out/"
 EXTRACT_WEAPONS_DIR = "./out/weaponE/"
 EXTRACT_UNITS_DIR = "./out/unitsE/"
 EXTRACT_UNIT_PICS_DIR = "./out/unitpicE/"
+EXTRACT_SCRIPTS_PATH = "./out/scripts/"
 EXTRACT_GUIS_DIR = "./out/guiE/"
 UNIT_PICS_DIR = "./data/unit_icons/"
 UNIT_DATA_PATH = "./data/units.json"
@@ -136,49 +137,18 @@ def gui_data(file_path):
     
     return data
 
-
-def get_version():
-    highest_major = 0
-    highest_minor = 0
-    highest_patch = 0
-    
-    for file in os.listdir(ESC_GIT_DIR):
-        if file.lower().startswith("gold"):
-            numbers = file[5:-4].split("_")
-            major = int(numbers[0])
-            minor = int(numbers[1])
-            patch = int(numbers[2])
-            
-            if major > highest_major:
-                highest_major = major
-                highest_minor = minor
-                highest_patch = patch
-            elif major == highest_major and minor > highest_minor:
-                highest_minor = minor
-                highest_patch = patch
-            elif major == highest_major and minor == highest_minor and patch > highest_patch:
-                highest_patch = patch
-    
-    return (highest_major, highest_minor, highest_patch)
-
 #
 # main program
 #
 
-def on_rm_error(func, path, exc_info):
-    os.chmod(path, stat.S_IWRITE)
-    os.unlink(path)
 
-shutil.rmtree(ESC_GIT_DIR, onerror=on_rm_error)
 subprocess.run(["git", "clone", "--depth", "1", ESC_GIT_REPO, ESC_GIT_DIR])
 
 shutil.rmtree(EXTRACT_DIR, ignore_errors=True)
-shutil.rmtree(UNIT_PICS_DIR, ignore_errors=True)
+# shutil.rmtree(UNIT_PICS_DIR, ignore_errors=True)
 
 os.makedirs(UNIT_PICS_DIR)
 
-print(get_version())
-# exit()
 
 for file in os.listdir(ESC_GIT_DIR):
     if not file.endswith(ESC_FILE_EXTENSIONS):
@@ -227,6 +197,28 @@ for file in os.listdir(ESC_GIT_DIR):
                 GUI_DATA[gui_name][int(gui_page)] = data
             elif len(data) > 0:
                 GUI_DATA[gui_name] = {int(gui_page): data}
+                
+    if path.exists(EXTRACT_SCRIPTS_PATH):
+        # calculate reload speed for unit weapons
+        for unit_name in UNIT_DATA:
+            unit = UNIT_DATA[unit_name]
+            
+            # has primary weapon
+            print(unit_name, unit["name"])
+            with open(EXTRACT_SCRIPTS_PATH + unit_name + ".cob", mode="rb") as file:
+                data = file.read()
+                if "weapon1" in unit:
+                    min_reload = int(WEAPON_DATA[unit["weapon1"]]["reloadtime"] * 1000)
+                    unit["weapon1reload"] = int(cob_interpreter.calculate_reload_speed(data, "primary", min_reload))
+                    print(unit["weapon1reload"])
+                if "weapon2" in unit:
+                    min_reload = int(WEAPON_DATA[unit["weapon2"]]["reloadtime"] * 1000)
+                    unit["weapon2reload"] = int(cob_interpreter.calculate_reload_speed(data, "secondary", min_reload))
+                    print(unit["weapon1reload"])
+                if "weapon3" in unit:
+                    min_reload = int(WEAPON_DATA[unit["weapon3"]]["reloadtime"] * 1000)
+                    unit["weapon3reload"] = int(cob_interpreter.calculate_reload_speed(data, "tertiary", min_reload))
+                    print(unit["weapon1reload"])
             
     
     shutil.rmtree(EXTRACT_DIR, ignore_errors=True)
@@ -355,6 +347,7 @@ for unit_name in UNIT_DATA:
         
                 
     unit["roviclass"] = rovi_class
+    
 
 
 with open(UNIT_DATA_PATH, "w") as f:
@@ -365,8 +358,8 @@ with open(WEAPON_DATA_PATH, "w") as f:
     
 with open(META_DATA_PATH, "w") as f:
     META_DATA = {
-        "updated_at": int(time.time()),
-        "success": True
+        "version": list(get_version()),
+        "updated_at": int(time.time())
     }
     json.dump(META_DATA, f, indent=4)
         

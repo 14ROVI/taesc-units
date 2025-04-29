@@ -2,7 +2,7 @@ use std::collections::HashMap;
 
 use gloo_net::http::Request;
 use js_sys::wasm_bindgen::JsValue;
-use js_sys::Date;
+use js_sys::{Array, Date, Intl::DateTimeFormat, Object, Reflect};
 use yew::prelude::*;
 use yew_router::prelude::*;
 
@@ -38,7 +38,9 @@ pub fn nav_bar() -> Html {
             <Link<Route> to={Route::Home}>{ "Home" }</Link<Route>>
             <Link<Route> to={Route::Units}>{ "Units" }</Link<Route>>
             <Link<Route> to={Route::Mirrors}>{ "Mirrors" }</Link<Route>>
-            <a href="https://github.com/14ROVI/taesc-units" style="margin-left: auto;">{ "This website's GitHub" }</a>
+            <a href="https://github.com/14ROVI/taesc-units" style="margin-left: auto;">
+                { "This website's GitHub" }
+            </a>
         </nav>
     }
 }
@@ -69,6 +71,10 @@ pub fn mirrors() -> Html {
     html! {
         <>
             <h1>{ "Mirrors" }</h1>
+            <h2>{ "9.9.8" }</h2>
+            <li><a href="/data/mirrors/ESC_998_FULL.zip">{ "ESC_998_FULL.zip" }</a>{ " " }<span>{ "(317MB)" }</span></li>
+            <li><a href="/data/mirrors/ESC_998_FULL.rar">{ "ESC_998_FULL.rar" }</a>{ " " }<span>{ "(310MB)" }</span></li>
+            <br/>
             <h2>{ "9.9.7" }</h2>
             <li><a href="/data/mirrors/ESC_997_FULL.zip">{ "ESC_997_FULL.zip" }</a>{ " " }<span>{ "(321MB)" }</span></li>
             <li><a href="/data/mirrors/ESC_997_FULL.rar">{ "ESC_997_FULL.rar" }</a>{ " " }<span>{ "(310MB)" }</span></li>
@@ -146,7 +152,17 @@ pub fn app() -> Html {
         });
     }
 
-    // let created_at = Date::new(&JsValue::from(*ctx.meta.updated_at));
+    let created_at_string = {
+        let options = DateTimeFormat::new(&Array::new(), &Object::new()).resolved_options();
+
+        Reflect::get(&options, &JsValue::from("locale"))
+            .ok()
+            .and_then(|locale| locale.as_string())
+            .map_or_else(
+                || created_at.to_date_string(),
+                |locale| created_at.to_locale_date_string(&locale, &Object::new()),
+            )
+    };
 
     html! {
         <ContextProvider<EscDataCtx> context={(*ctx).clone()}>
@@ -155,7 +171,7 @@ pub fn app() -> Html {
                 <main>
                     <Switch<Route> render={switch} />
                 </main>
-                <p>{ "Last updated at: " }{ created_at.to_iso_string() }</p>
+                <p>{ "Last updated on: " }{ created_at_string }</p>
             </BrowserRouter>
         </ContextProvider<EscDataCtx>>
     }

@@ -34,11 +34,54 @@ pub fn unit_page(props: &UnitPageProps) -> Html {
             <>
                 <div class="unit-info">
                     <div>
-                        <h1>{"("}{ unit.side.clone() }{") "}{ unit.name.clone() }</h1>
+                        <h1>{format!("({}) {}", unit.side.clone(), unit.name.clone())}</h1>
                         <p>{ unit.description.clone() }</p>
                         <img width=200 height=200 src={img_url}/>
                         <p>{ "Summon with: "}<code>{ "+" }{ unit.unit_name.clone() }</code></p>
                     </div>
+
+                    <div>
+                        <table>
+                            <tr>
+                                <th>{"General stats"}</th>
+                            </tr>
+
+                            <tr>
+                                <td>{"Metal cost"}</td>
+                                <td>{String::from(format_i64(unit.build_cost_metal))}</td>
+                            </tr>
+
+                            <tr>
+                                <td>{"Energy cost"}</td>
+                                <td>{String::from(format_i64(unit.build_cost_energy))}</td>
+                            </tr>
+
+                            if unit.energy_make != 0.0 {
+                                <tr>
+                                    <td>{"Energy make"}</td>
+                                    <td>{String::from(format_f64(unit.energy_make))}</td>
+                                </tr>
+                            }
+
+                            <tr>
+                                <td>{"Build time"}</td>
+                                <td>{String::from(format_i64(unit.build_time))}</td>
+                            </tr>
+
+                            <tr>
+                                <td>{"Health"}</td>
+                                <td>{String::from(format_i64(unit.max_damage))}</td>
+                            </tr>
+
+                            if unit.damage_modifier != 0.0 {
+                                <tr>
+                                    <td>{"Armour damage modifier"}</td>
+                                    <td>{String::from(format_f64(unit.damage_modifier))}</td>
+                                </tr>
+                            }
+                        </table>
+                    </div>
+
                     <div>
                         <p>{ format!("Costs {} metal", format_i64(unit.build_cost_metal)) }</p>
                         <p>{ format!("Costs {} energy", format_i64(unit.build_cost_energy)) }</p>

@@ -9,3 +9,5 @@ just_extract.py
 data/
 __pycache__/
 .idea/
+data_parsing/*/
+!data_parsing/*.*

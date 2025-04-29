@@ -1,0 +1,2202 @@
+#define TA			// This is a TA script
+
+#include "sfxtype.h"
+#include "exptype.h"
+
+piece  emg1, emg2, base, body, glow, dome, firepoint, Legs,
+       Leg1-0, Leg1-1, Leg1-2, Leg1-3, Leg1-4, End1, Leg2-0, Leg2-1,
+       Leg2-2, Leg2-3, Leg2-4, End2, Leg3-0, Leg3-1, Leg3-2, Leg3-3,
+       Leg3-4, End3, Leg4-0, Leg4-1, Leg4-2, Leg4-3, Leg4-4, End4,
+       Leg5-0, Leg5-1, Leg5-2, Leg5-3, Leg5-4, End5, Leg6-0, Leg6-1,
+       Leg6-2, Leg6-3, Leg6-4, End6, Angular1, Point1, Stride1, Point4,
+       Stride4, Point5, Stride5, AnglePoint1, Angular2, Point2, Stride2, Point3,
+       Stride3, Point6, Stride6, AnglePoint2, Crush_Shoulder, Crush_Arm, Foot1, Foot2,
+       Foot3, Foot4, Foot5, Foot6, Shell, brawl, gaat, glow2;
+
+static-var  statechg_DesiredState, statechg_StateChanging, Static_Var_3, Static_Var_4, bMoving,
+            gun_1, Static_Var_7, Static_Var_8, Static_Var_9, bAiming,
+            Static_Var_11, Static_Var_12, Static_Var_13, Static_Var_14, Static_Var_15,
+            Static_Var_16, Static_Var_17, Static_Var_18, Static_Var_19, Static_Var_20,
+            Static_Var_21, Static_Var_22, Static_Var_23, Static_Var_24, Static_Var_25,
+            Static_Var_26, Static_Var_27, Static_Var_28, Static_Var_29, Static_Var_30,
+            Static_Var_31, Static_Var_32, Static_Var_33, Static_Var_34, Static_Var_35,
+            Static_Var_36, Static_Var_37, Static_Var_38, Static_Var_39, Static_Var_40,
+            Static_Var_41, Static_Var_42, Static_Var_43, Static_Var_44, Static_Var_45,
+            Static_Var_46, Static_Var_47, Static_Var_48, Static_Var_49, Static_Var_50,
+            Static_Var_51, Static_Var_52, Static_Var_53;
+
+// Signal definitions
+#define SIG_AIM_3			2
+#define SIG_AIM				4
+#define SIG_AIM_2			8
+#define SIG_MOVE			32
+
+
+PositionLegs(Func_Var_1, Func_Var_2, Func_Var_3, Func_Var_4, Func_Var_5, Func_Var_6, Func_Var_7, Func_Var_8, Func_Var_9, Func_Var_10)
+{
+	while( TRUE )
+	{
+		Func_Var_10 = 0;
+		move Point1 to y-axis get GROUND_HEIGHT(get PIECE_XZ(Point1)) - get PIECE_Y(Point1) speed [30.000000];
+		move Point2 to y-axis get GROUND_HEIGHT(get PIECE_XZ(Point2)) - get PIECE_Y(Point2) speed [30.000000];
+		move Point3 to y-axis get GROUND_HEIGHT(get PIECE_XZ(Point3)) - get PIECE_Y(Point3) speed [30.000000];
+		move Point4 to y-axis get GROUND_HEIGHT(get PIECE_XZ(Point4)) - get PIECE_Y(Point4) speed [30.000000];
+		move Point5 to y-axis get GROUND_HEIGHT(get PIECE_XZ(Point5)) - get PIECE_Y(Point5) speed [30.000000];
+		move Point6 to y-axis get GROUND_HEIGHT(get PIECE_XZ(Point6)) - get PIECE_Y(Point6) speed [30.000000];
+		Func_Var_1 = get XZ_ATAN(get PIECE_XZ(Leg1-0) - get PIECE_XZ(Stride1));
+		turn Leg1-0 to y-axis Func_Var_1 now;
+		Func_Var_7 = 0;
+		Func_Var_8 = 16384;
+		Func_Var_3 = get HYPOT(get PIECE_Y(Leg1-0) - get PIECE_Y(Stride1),get XZ_HYPOT(get PIECE_XZ(Leg1-0) - get PIECE_XZ(Stride1)));
+		while( Func_Var_8 != 0 )
+		{
+			Func_Var_5 = Func_Var_7 + Func_Var_8;
+			turn Leg1-2 to x-axis Func_Var_5 now;
+			turn Leg1-3 to x-axis Func_Var_5 now;
+			turn Leg1-4 to x-axis Func_Var_5 * <0.005495> / <0.010989> now;
+			if( get HYPOT(get PIECE_Y(Leg1-0) - get PIECE_Y(End1),get XZ_HYPOT(get PIECE_XZ(Leg1-0) - get PIECE_XZ(End1))) > Func_Var_3 )
+			{
+				Func_Var_7 = Func_Var_7 + Func_Var_8;
+			}
+			Func_Var_8 = Func_Var_8 / 2;
+		}
+		turn Leg1-0 to x-axis <0.000000> now;
+		Func_Var_6 = get ATAN(get PIECE_Y(Leg1-0) - get PIECE_Y(End1),get XZ_HYPOT(get PIECE_XZ(Leg1-0) - get PIECE_XZ(End1)));
+		Func_Var_4 = get XZ_ATAN(get PIECE_XZ(End1) - get PIECE_XZ(Leg1-0)) - get XZ_ATAN(get PIECE_XZ(Stride1) - get PIECE_XZ(Leg1-0));
+		while( Func_Var_4 < 0 )
+		{
+			Func_Var_4 = Func_Var_4 + 65536;
+		}
+		while( Func_Var_4 >= 32768 )
+		{
+			Func_Var_4 = Func_Var_4 - 65536;
+		}
+		if( Func_Var_4 < 0 )
+		{
+			Func_Var_4 = 0 - Func_Var_4;
+		}
+		if( Func_Var_4 >= 16384 )
+		{
+			Func_Var_2 = get ATAN(get PIECE_Y(Leg1-0) - get PIECE_Y(Stride1),get XZ_HYPOT(get PIECE_XZ(Leg1-0) - get PIECE_XZ(Stride1))) + Func_Var_6 - 32768;
+		}
+		if( Func_Var_4 < 16384 )
+		{
+			Func_Var_2 = get ATAN(get PIECE_Y(Leg1-0) - get PIECE_Y(Stride1),get XZ_HYPOT(get PIECE_XZ(Leg1-0) - get PIECE_XZ(Stride1))) - Func_Var_6;
+		}
+		turn Leg1-0 to x-axis Func_Var_2 now;
+		if( Func_Var_1 > Static_Var_36 + 182 OR Func_Var_1 < Static_Var_36 - 182 )
+		{
+			turn Leg1-0 to y-axis Static_Var_36 now;
+			Func_Var_9 = ( Func_Var_1 - Static_Var_36 ) * 1000 / 100;
+			while( Func_Var_9 < 0 )
+			{
+				Func_Var_9 = Func_Var_9 + 65536;
+			}
+			while( Func_Var_9 >= 32768 )
+			{
+				Func_Var_9 = Func_Var_9 - 65536;
+			}
+			if( Func_Var_9 < 0 )
+			{
+				Func_Var_9 = 0 - Func_Var_9;
+			}
+			turn Leg1-0 to y-axis Func_Var_1 speed Func_Var_9;
+			Static_Var_36 = Func_Var_1;
+		}
+		else
+		{
+			turn Leg1-0 to y-axis Static_Var_36 now;
+		}
+		if( Func_Var_5 > Static_Var_38 + 182 OR Func_Var_5 < Static_Var_38 - 182 )
+		{
+			turn Leg1-2 to x-axis Static_Var_38 now;
+			Func_Var_9 = ( Func_Var_5 - Static_Var_38 ) * 1000 / 100;
+			while( Func_Var_9 < 0 )
+			{
+				Func_Var_9 = Func_Var_9 + 65536;
+			}
+			while( Func_Var_9 >= 32768 )
+			{
+				Func_Var_9 = Func_Var_9 - 65536;
+			}
+			if( Func_Var_9 < 0 )
+			{
+				Func_Var_9 = 0 - Func_Var_9;
+			}
+			turn Leg1-2 to x-axis Func_Var_5 speed Func_Var_9;
+			turn Leg1-3 to x-axis Static_Var_38 now;
+			Func_Var_9 = ( Func_Var_5 - Static_Var_38 ) * 1000 / 100;
+			while( Func_Var_9 < 0 )
+			{
+				Func_Var_9 = Func_Var_9 + 65536;
+			}
+			while( Func_Var_9 >= 32768 )
+			{
+				Func_Var_9 = Func_Var_9 - 65536;
+			}
+			if( Func_Var_9 < 0 )
+			{
+				Func_Var_9 = 0 - Func_Var_9;
+			}
+			turn Leg1-3 to x-axis Func_Var_5 speed Func_Var_9;
+			turn Leg1-4 to x-axis Static_Var_38 * <0.005495> / <0.010989> now;
+			Func_Var_9 = ( Func_Var_5 * 1 / 2 - Static_Var_38 * 1 / 2 ) * 1000 / 100;
+			while( Func_Var_9 < 0 )
+			{
+				Func_Var_9 = Func_Var_9 + 65536;
+			}
+			while( Func_Var_9 >= 32768 )
+			{
+				Func_Var_9 = Func_Var_9 - 65536;
+			}
+			if( Func_Var_9 < 0 )
+			{
+				Func_Var_9 = 0 - Func_Var_9;
+			}
+			turn Leg1-4 to x-axis Func_Var_5 * <0.005495> / <0.010989> speed Func_Var_9;
+			Static_Var_38 = Func_Var_5;
+		}
+		else
+		{
+			turn Leg1-2 to x-axis Static_Var_38 now;
+			turn Leg1-3 to x-axis Static_Var_38 now;
+			turn Leg1-4 to x-axis Static_Var_38 * <0.005495> / <0.010989> now;
+		}
+		if( Func_Var_2 > Static_Var_37 + 182 OR Func_Var_2 < Static_Var_37 - 182 )
+		{
+			turn Leg1-0 to x-axis Static_Var_37 now;
+			Func_Var_9 = ( Func_Var_2 - Static_Var_37 ) * 1000 / 100;
+			while( Func_Var_9 < 0 )
+			{
+				Func_Var_9 = Func_Var_9 + 65536;
+			}
+			while( Func_Var_9 >= 32768 )
+			{
+				Func_Var_9 = Func_Var_9 - 65536;
+			}
+			if( Func_Var_9 < 0 )
+			{
+				Func_Var_9 = 0 - Func_Var_9;
+			}
+			turn Leg1-0 to x-axis Func_Var_2 speed Func_Var_9;
+			Static_Var_37 = Func_Var_2;
+		}
+		else
+		{
+			turn Leg1-0 to x-axis Static_Var_37 now;
+		}
+		Func_Var_1 = get XZ_ATAN(get PIECE_XZ(Leg2-0) - get PIECE_XZ(Stride2));
+		turn Leg2-0 to y-axis Func_Var_1 now;
+		Func_Var_7 = 0;
+		Func_Var_8 = 16384;
+		Func_Var_3 = get HYPOT(get PIECE_Y(Leg2-0) - get PIECE_Y(Stride2),get XZ_HYPOT(get PIECE_XZ(Leg2-0) - get PIECE_XZ(Stride2)));
+		while( Func_Var_8 != 0 )
+		{
+			Func_Var_5 = Func_Var_7 + Func_Var_8;
+			turn Leg2-2 to x-axis Func_Var_5 now;
+			turn Leg2-3 to x-axis Func_Var_5 now;
+			turn Leg2-4 to x-axis Func_Var_5 * <0.005495> / <0.010989> now;
+			if( get HYPOT(get PIECE_Y(Leg2-0) - get PIECE_Y(End2),get XZ_HYPOT(get PIECE_XZ(Leg2-0) - get PIECE_XZ(End2))) > Func_Var_3 )
+			{
+				Func_Var_7 = Func_Var_7 + Func_Var_8;
+			}
+			Func_Var_8 = Func_Var_8 / 2;
+		}
+		turn Leg2-0 to x-axis <0.000000> now;
+		Func_Var_6 = get ATAN(get PIECE_Y(Leg2-0) - get PIECE_Y(End2),get XZ_HYPOT(get PIECE_XZ(Leg2-0) - get PIECE_XZ(End2)));
+		Func_Var_4 = get XZ_ATAN(get PIECE_XZ(End2) - get PIECE_XZ(Leg2-0)) - get XZ_ATAN(get PIECE_XZ(Stride2) - get PIECE_XZ(Leg2-0));
+		while( Func_Var_4 < 0 )
+		{
+			Func_Var_4 = Func_Var_4 + 65536;
+		}
+		while( Func_Var_4 >= 32768 )
+		{
+			Func_Var_4 = Func_Var_4 - 65536;
+		}
+		if( Func_Var_4 < 0 )
+		{
+			Func_Var_4 = 0 - Func_Var_4;
+		}
+		if( Func_Var_4 >= 16384 )
+		{
+			Func_Var_2 = get ATAN(get PIECE_Y(Leg2-0) - get PIECE_Y(Stride2),get XZ_HYPOT(get PIECE_XZ(Leg2-0) - get PIECE_XZ(Stride2))) + Func_Var_6 - 32768;
+		}
+		if( Func_Var_4 < 16384 )
+		{
+			Func_Var_2 = get ATAN(get PIECE_Y(Leg2-0) - get PIECE_Y(Stride2),get XZ_HYPOT(get PIECE_XZ(Leg2-0) - get PIECE_XZ(Stride2))) - Func_Var_6;
+		}
+		turn Leg2-0 to x-axis Func_Var_2 now;
+		if( Func_Var_1 > Static_Var_39 + 182 OR Func_Var_1 < Static_Var_39 - 182 )
+		{
+			turn Leg2-0 to y-axis Static_Var_39 now;
+			Func_Var_9 = ( Func_Var_1 - Static_Var_39 ) * 1000 / 100;
+			while( Func_Var_9 < 0 )
+			{
+				Func_Var_9 = Func_Var_9 + 65536;
+			}
+			while( Func_Var_9 >= 32768 )
+			{
+				Func_Var_9 = Func_Var_9 - 65536;
+			}
+			if( Func_Var_9 < 0 )
+			{
+				Func_Var_9 = 0 - Func_Var_9;
+			}
+			turn Leg2-0 to y-axis Func_Var_1 speed Func_Var_9;
+			Static_Var_39 = Func_Var_1;
+		}
+		else
+		{
+			turn Leg2-0 to y-axis Static_Var_39 now;
+		}
+		if( Func_Var_5 > Static_Var_41 + 182 OR Func_Var_5 < Static_Var_41 - 182 )
+		{
+			turn Leg2-2 to x-axis Static_Var_41 now;
+			Func_Var_9 = ( Func_Var_5 - Static_Var_41 ) * 1000 / 100;
+			while( Func_Var_9 < 0 )
+			{
+				Func_Var_9 = Func_Var_9 + 65536;
+			}
+			while( Func_Var_9 >= 32768 )
+			{
+				Func_Var_9 = Func_Var_9 - 65536;
+			}
+			if( Func_Var_9 < 0 )
+			{
+				Func_Var_9 = 0 - Func_Var_9;
+			}
+			turn Leg2-2 to x-axis Func_Var_5 speed Func_Var_9;
+			turn Leg2-3 to x-axis Static_Var_41 now;
+			Func_Var_9 = ( Func_Var_5 - Static_Var_41 ) * 1000 / 100;
+			while( Func_Var_9 < 0 )
+			{
+				Func_Var_9 = Func_Var_9 + 65536;
+			}
+			while( Func_Var_9 >= 32768 )
+			{
+				Func_Var_9 = Func_Var_9 - 65536;
+			}
+			if( Func_Var_9 < 0 )
+			{
+				Func_Var_9 = 0 - Func_Var_9;
+			}
+			turn Leg2-3 to x-axis Func_Var_5 speed Func_Var_9;
+			turn Leg2-4 to x-axis Static_Var_41 * <0.005495> / <0.010989> now;
+			Func_Var_9 = ( Func_Var_5 * 1 / 2 - Static_Var_41 * 1 / 2 ) * 1000 / 100;
+			while( Func_Var_9 < 0 )
+			{
+				Func_Var_9 = Func_Var_9 + 65536;
+			}
+			while( Func_Var_9 >= 32768 )
+			{
+				Func_Var_9 = Func_Var_9 - 65536;
+			}
+			if( Func_Var_9 < 0 )
+			{
+				Func_Var_9 = 0 - Func_Var_9;
+			}
+			turn Leg2-4 to x-axis Func_Var_5 * <0.005495> / <0.010989> speed Func_Var_9;
+			Static_Var_41 = Func_Var_5;
+		}
+		else
+		{
+			turn Leg2-2 to x-axis Static_Var_41 now;
+			turn Leg2-3 to x-axis Static_Var_41 now;
+			turn Leg2-4 to x-axis Static_Var_41 * <0.005495> / <0.010989> now;
+		}
+		if( Func_Var_2 > Static_Var_40 + 182 OR Func_Var_2 < Static_Var_40 - 182 )
+		{
+			turn Leg2-0 to x-axis Static_Var_40 now;
+			Func_Var_9 = ( Func_Var_2 - Static_Var_40 ) * 1000 / 100;
+			while( Func_Var_9 < 0 )
+			{
+				Func_Var_9 = Func_Var_9 + 65536;
+			}
+			while( Func_Var_9 >= 32768 )
+			{
+				Func_Var_9 = Func_Var_9 - 65536;
+			}
+			if( Func_Var_9 < 0 )
+			{
+				Func_Var_9 = 0 - Func_Var_9;
+			}
+			turn Leg2-0 to x-axis Func_Var_2 speed Func_Var_9;
+			Static_Var_40 = Func_Var_2;
+		}
+		else
+		{
+			turn Leg2-0 to x-axis Static_Var_40 now;
+		}
+		Func_Var_1 = get XZ_ATAN(get PIECE_XZ(Leg3-0) - get PIECE_XZ(Stride3));
+		turn Leg3-0 to y-axis Func_Var_1 now;
+		Func_Var_7 = 0;
+		Func_Var_8 = 16384;
+		Func_Var_3 = get HYPOT(get PIECE_Y(Leg3-0) - get PIECE_Y(Stride3),get XZ_HYPOT(get PIECE_XZ(Leg3-0) - get PIECE_XZ(Stride3)));
+		while( Func_Var_8 != 0 )
+		{
+			Func_Var_5 = Func_Var_7 + Func_Var_8;
+			turn Leg3-2 to x-axis Func_Var_5 now;
+			turn Leg3-3 to x-axis Func_Var_5 now;
+			turn Leg3-4 to x-axis Func_Var_5 * <0.005495> / <0.010989> now;
+			if( get HYPOT(get PIECE_Y(Leg3-0) - get PIECE_Y(End3),get XZ_HYPOT(get PIECE_XZ(Leg3-0) - get PIECE_XZ(End3))) > Func_Var_3 )
+			{
+				Func_Var_7 = Func_Var_7 + Func_Var_8;
+			}
+			Func_Var_8 = Func_Var_8 / 2;
+		}
+		turn Leg3-0 to x-axis <0.000000> now;
+		Func_Var_6 = get ATAN(get PIECE_Y(Leg3-0) - get PIECE_Y(End3),get XZ_HYPOT(get PIECE_XZ(Leg3-0) - get PIECE_XZ(End3)));
+		Func_Var_4 = get XZ_ATAN(get PIECE_XZ(End3) - get PIECE_XZ(Leg3-0)) - get XZ_ATAN(get PIECE_XZ(Stride3) - get PIECE_XZ(Leg3-0));
+		while( Func_Var_4 < 0 )
+		{
+			Func_Var_4 = Func_Var_4 + 65536;
+		}
+		while( Func_Var_4 >= 32768 )
+		{
+			Func_Var_4 = Func_Var_4 - 65536;
+		}
+		if( Func_Var_4 < 0 )
+		{
+			Func_Var_4 = 0 - Func_Var_4;
+		}
+		if( Func_Var_4 >= 16384 )
+		{
+			Func_Var_2 = get ATAN(get PIECE_Y(Leg3-0) - get PIECE_Y(Stride3),get XZ_HYPOT(get PIECE_XZ(Leg3-0) - get PIECE_XZ(Stride3))) + Func_Var_6 - 32768;
+		}
+		if( Func_Var_4 < 16384 )
+		{
+			Func_Var_2 = get ATAN(get PIECE_Y(Leg3-0) - get PIECE_Y(Stride3),get XZ_HYPOT(get PIECE_XZ(Leg3-0) - get PIECE_XZ(Stride3))) - Func_Var_6;
+		}
+		turn Leg3-0 to x-axis Func_Var_2 now;
+		if( Func_Var_1 > Static_Var_42 + 182 OR Func_Var_1 < Static_Var_42 - 182 )
+		{
+			turn Leg3-0 to y-axis Static_Var_42 now;
+			Func_Var_9 = ( Func_Var_1 - Static_Var_42 ) * 1000 / 100;
+			while( Func_Var_9 < 0 )
+			{
+				Func_Var_9 = Func_Var_9 + 65536;
+			}
+			while( Func_Var_9 >= 32768 )
+			{
+				Func_Var_9 = Func_Var_9 - 65536;
+			}
+			if( Func_Var_9 < 0 )
+			{
+				Func_Var_9 = 0 - Func_Var_9;
+			}
+			turn Leg3-0 to y-axis Func_Var_1 speed Func_Var_9;
+			Static_Var_42 = Func_Var_1;
+		}
+		else
+		{
+			turn Leg3-0 to y-axis Static_Var_42 now;
+		}
+		if( Func_Var_5 > Static_Var_44 + 182 OR Func_Var_5 < Static_Var_44 - 182 )
+		{
+			turn Leg3-2 to x-axis Static_Var_44 now;
+			Func_Var_9 = ( Func_Var_5 - Static_Var_44 ) * 1000 / 100;
+			while( Func_Var_9 < 0 )
+			{
+				Func_Var_9 = Func_Var_9 + 65536;
+			}
+			while( Func_Var_9 >= 32768 )
+			{
+				Func_Var_9 = Func_Var_9 - 65536;
+			}
+			if( Func_Var_9 < 0 )
+			{
+				Func_Var_9 = 0 - Func_Var_9;
+			}
+			turn Leg3-2 to x-axis Func_Var_5 speed Func_Var_9;
+			turn Leg3-3 to x-axis Static_Var_44 now;
+			Func_Var_9 = ( Func_Var_5 - Static_Var_44 ) * 1000 / 100;
+			while( Func_Var_9 < 0 )
+			{
+				Func_Var_9 = Func_Var_9 + 65536;
+			}
+			while( Func_Var_9 >= 32768 )
+			{
+				Func_Var_9 = Func_Var_9 - 65536;
+			}
+			if( Func_Var_9 < 0 )
+			{
+				Func_Var_9 = 0 - Func_Var_9;
+			}
+			turn Leg3-3 to x-axis Func_Var_5 speed Func_Var_9;
+			turn Leg3-4 to x-axis Static_Var_44 * <0.005495> / <0.010989> now;
+			Func_Var_9 = ( Func_Var_5 * 1 / 2 - Static_Var_44 * 1 / 2 ) * 1000 / 100;
+			while( Func_Var_9 < 0 )
+			{
+				Func_Var_9 = Func_Var_9 + 65536;
+			}
+			while( Func_Var_9 >= 32768 )
+			{
+				Func_Var_9 = Func_Var_9 - 65536;
+			}
+			if( Func_Var_9 < 0 )
+			{
+				Func_Var_9 = 0 - Func_Var_9;
+			}
+			turn Leg3-4 to x-axis Func_Var_5 * <0.005495> / <0.010989> speed Func_Var_9;
+			Static_Var_44 = Func_Var_5;
+		}
+		else
+		{
+			turn Leg3-2 to x-axis Static_Var_44 now;
+			turn Leg3-3 to x-axis Static_Var_44 now;
+			turn Leg3-4 to x-axis Static_Var_44 * <0.005495> / <0.010989> now;
+		}
+		if( Func_Var_2 > Static_Var_43 + 182 OR Func_Var_2 < Static_Var_43 - 182 )
+		{
+			turn Leg3-0 to x-axis Static_Var_43 now;
+			Func_Var_9 = ( Func_Var_2 - Static_Var_43 ) * 1000 / 100;
+			while( Func_Var_9 < 0 )
+			{
+				Func_Var_9 = Func_Var_9 + 65536;
+			}
+			while( Func_Var_9 >= 32768 )
+			{
+				Func_Var_9 = Func_Var_9 - 65536;
+			}
+			if( Func_Var_9 < 0 )
+			{
+				Func_Var_9 = 0 - Func_Var_9;
+			}
+			turn Leg3-0 to x-axis Func_Var_2 speed Func_Var_9;
+			Static_Var_43 = Func_Var_2;
+		}
+		else
+		{
+			turn Leg3-0 to x-axis Static_Var_43 now;
+		}
+		Func_Var_1 = get XZ_ATAN(get PIECE_XZ(Leg4-0) - get PIECE_XZ(Stride4));
+		turn Leg4-0 to y-axis Func_Var_1 now;
+		Func_Var_7 = 0;
+		Func_Var_8 = 16384;
+		Func_Var_3 = get HYPOT(get PIECE_Y(Leg4-0) - get PIECE_Y(Stride4),get XZ_HYPOT(get PIECE_XZ(Leg4-0) - get PIECE_XZ(Stride4)));
+		while( Func_Var_8 != 0 )
+		{
+			Func_Var_5 = Func_Var_7 + Func_Var_8;
+			turn Leg4-2 to x-axis Func_Var_5 now;
+			turn Leg4-3 to x-axis Func_Var_5 now;
+			turn Leg4-4 to x-axis Func_Var_5 * <0.005495> / <0.010989> now;
+			if( get HYPOT(get PIECE_Y(Leg4-0) - get PIECE_Y(End4),get XZ_HYPOT(get PIECE_XZ(Leg4-0) - get PIECE_XZ(End4))) > Func_Var_3 )
+			{
+				Func_Var_7 = Func_Var_7 + Func_Var_8;
+			}
+			Func_Var_8 = Func_Var_8 / 2;
+		}
+		turn Leg4-0 to x-axis <0.000000> now;
+		Func_Var_6 = get ATAN(get PIECE_Y(Leg4-0) - get PIECE_Y(End4),get XZ_HYPOT(get PIECE_XZ(Leg4-0) - get PIECE_XZ(End4)));
+		Func_Var_4 = get XZ_ATAN(get PIECE_XZ(End4) - get PIECE_XZ(Leg4-0)) - get XZ_ATAN(get PIECE_XZ(Stride4) - get PIECE_XZ(Leg4-0));
+		while( Func_Var_4 < 0 )
+		{
+			Func_Var_4 = Func_Var_4 + 65536;
+		}
+		while( Func_Var_4 >= 32768 )
+		{
+			Func_Var_4 = Func_Var_4 - 65536;
+		}
+		if( Func_Var_4 < 0 )
+		{
+			Func_Var_4 = 0 - Func_Var_4;
+		}
+		if( Func_Var_4 >= 16384 )
+		{
+			Func_Var_2 = get ATAN(get PIECE_Y(Leg4-0) - get PIECE_Y(Stride4),get XZ_HYPOT(get PIECE_XZ(Leg4-0) - get PIECE_XZ(Stride4))) + Func_Var_6 - 32768;
+		}
+		if( Func_Var_4 < 16384 )
+		{
+			Func_Var_2 = get ATAN(get PIECE_Y(Leg4-0) - get PIECE_Y(Stride4),get XZ_HYPOT(get PIECE_XZ(Leg4-0) - get PIECE_XZ(Stride4))) - Func_Var_6;
+		}
+		turn Leg4-0 to x-axis Func_Var_2 now;
+		if( Func_Var_1 > Static_Var_45 + 182 OR Func_Var_1 < Static_Var_45 - 182 )
+		{
+			turn Leg4-0 to y-axis Static_Var_45 now;
+			Func_Var_9 = ( Func_Var_1 - Static_Var_45 ) * 1000 / 100;
+			while( Func_Var_9 < 0 )
+			{
+				Func_Var_9 = Func_Var_9 + 65536;
+			}
+			while( Func_Var_9 >= 32768 )
+			{
+				Func_Var_9 = Func_Var_9 - 65536;
+			}
+			if( Func_Var_9 < 0 )
+			{
+				Func_Var_9 = 0 - Func_Var_9;
+			}
+			turn Leg4-0 to y-axis Func_Var_1 speed Func_Var_9;
+			Static_Var_45 = Func_Var_1;
+		}
+		else
+		{
+			turn Leg4-0 to y-axis Static_Var_45 now;
+		}
+		if( Func_Var_5 > Static_Var_47 + 182 OR Func_Var_5 < Static_Var_47 - 182 )
+		{
+			turn Leg4-2 to x-axis Static_Var_47 now;
+			Func_Var_9 = ( Func_Var_5 - Static_Var_47 ) * 1000 / 100;
+			while( Func_Var_9 < 0 )
+			{
+				Func_Var_9 = Func_Var_9 + 65536;
+			}
+			while( Func_Var_9 >= 32768 )
+			{
+				Func_Var_9 = Func_Var_9 - 65536;
+			}
+			if( Func_Var_9 < 0 )
+			{
+				Func_Var_9 = 0 - Func_Var_9;
+			}
+			turn Leg4-2 to x-axis Func_Var_5 speed Func_Var_9;
+			turn Leg4-3 to x-axis Static_Var_47 now;
+			Func_Var_9 = ( Func_Var_5 - Static_Var_47 ) * 1000 / 100;
+			while( Func_Var_9 < 0 )
+			{
+				Func_Var_9 = Func_Var_9 + 65536;
+			}
+			while( Func_Var_9 >= 32768 )
+			{
+				Func_Var_9 = Func_Var_9 - 65536;
+			}
+			if( Func_Var_9 < 0 )
+			{
+				Func_Var_9 = 0 - Func_Var_9;
+			}
+			turn Leg4-3 to x-axis Func_Var_5 speed Func_Var_9;
+			turn Leg4-4 to x-axis Static_Var_47 * <0.005495> / <0.010989> now;
+			Func_Var_9 = ( Func_Var_5 * 1 / 2 - Static_Var_47 * 1 / 2 ) * 1000 / 100;
+			while( Func_Var_9 < 0 )
+			{
+				Func_Var_9 = Func_Var_9 + 65536;
+			}
+			while( Func_Var_9 >= 32768 )
+			{
+				Func_Var_9 = Func_Var_9 - 65536;
+			}
+			if( Func_Var_9 < 0 )
+			{
+				Func_Var_9 = 0 - Func_Var_9;
+			}
+			turn Leg4-4 to x-axis Func_Var_5 * <0.005495> / <0.010989> speed Func_Var_9;
+			Static_Var_47 = Func_Var_5;
+		}
+		else
+		{
+			turn Leg4-2 to x-axis Static_Var_47 now;
+			turn Leg4-3 to x-axis Static_Var_47 now;
+			turn Leg4-4 to x-axis Static_Var_47 * <0.005495> / <0.010989> now;
+		}
+		if( Func_Var_2 > Static_Var_46 + 182 OR Func_Var_2 < Static_Var_46 - 182 )
+		{
+			turn Leg4-0 to x-axis Static_Var_46 now;
+			Func_Var_9 = ( Func_Var_2 - Static_Var_46 ) * 1000 / 100;
+			while( Func_Var_9 < 0 )
+			{
+				Func_Var_9 = Func_Var_9 + 65536;
+			}
+			while( Func_Var_9 >= 32768 )
+			{
+				Func_Var_9 = Func_Var_9 - 65536;
+			}
+			if( Func_Var_9 < 0 )
+			{
+				Func_Var_9 = 0 - Func_Var_9;
+			}
+			turn Leg4-0 to x-axis Func_Var_2 speed Func_Var_9;
+			Static_Var_46 = Func_Var_2;
+		}
+		else
+		{
+			turn Leg4-0 to x-axis Static_Var_46 now;
+		}
+		Func_Var_1 = get XZ_ATAN(get PIECE_XZ(Leg5-0) - get PIECE_XZ(Stride5));
+		turn Leg5-0 to y-axis Func_Var_1 now;
+		Func_Var_7 = 0;
+		Func_Var_8 = 16384;
+		Func_Var_3 = get HYPOT(get PIECE_Y(Leg5-0) - get PIECE_Y(Stride5),get XZ_HYPOT(get PIECE_XZ(Leg5-0) - get PIECE_XZ(Stride5)));
+		while( Func_Var_8 != 0 )
+		{
+			Func_Var_5 = Func_Var_7 + Func_Var_8;
+			turn Leg5-2 to x-axis Func_Var_5 now;
+			turn Leg5-3 to x-axis Func_Var_5 now;
+			turn Leg5-4 to x-axis Func_Var_5 * <0.005495> / <0.010989> now;
+			if( get HYPOT(get PIECE_Y(Leg5-0) - get PIECE_Y(End5),get XZ_HYPOT(get PIECE_XZ(Leg5-0) - get PIECE_XZ(End5))) > Func_Var_3 )
+			{
+				Func_Var_7 = Func_Var_7 + Func_Var_8;
+			}
+			Func_Var_8 = Func_Var_8 / 2;
+		}
+		turn Leg5-0 to x-axis <0.000000> now;
+		Func_Var_6 = get ATAN(get PIECE_Y(Leg5-0) - get PIECE_Y(End5),get XZ_HYPOT(get PIECE_XZ(Leg5-0) - get PIECE_XZ(End5)));
+		Func_Var_4 = get XZ_ATAN(get PIECE_XZ(End5) - get PIECE_XZ(Leg5-0)) - get XZ_ATAN(get PIECE_XZ(Stride5) - get PIECE_XZ(Leg5-0));
+		while( Func_Var_4 < 0 )
+		{
+			Func_Var_4 = Func_Var_4 + 65536;
+		}
+		while( Func_Var_4 >= 32768 )
+		{
+			Func_Var_4 = Func_Var_4 - 65536;
+		}
+		if( Func_Var_4 < 0 )
+		{
+			Func_Var_4 = 0 - Func_Var_4;
+		}
+		if( Func_Var_4 >= 16384 )
+		{
+			Func_Var_2 = get ATAN(get PIECE_Y(Leg5-0) - get PIECE_Y(Stride5),get XZ_HYPOT(get PIECE_XZ(Leg5-0) - get PIECE_XZ(Stride5))) + Func_Var_6 - 32768;
+		}
+		if( Func_Var_4 < 16384 )
+		{
+			Func_Var_2 = get ATAN(get PIECE_Y(Leg5-0) - get PIECE_Y(Stride5),get XZ_HYPOT(get PIECE_XZ(Leg5-0) - get PIECE_XZ(Stride5))) - Func_Var_6;
+		}
+		turn Leg5-0 to x-axis Func_Var_2 now;
+		if( Func_Var_1 > Static_Var_48 + 182 OR Func_Var_1 < Static_Var_48 - 182 )
+		{
+			turn Leg5-0 to y-axis Static_Var_48 now;
+			Func_Var_9 = ( Func_Var_1 - Static_Var_48 ) * 1000 / 100;
+			while( Func_Var_9 < 0 )
+			{
+				Func_Var_9 = Func_Var_9 + 65536;
+			}
+			while( Func_Var_9 >= 32768 )
+			{
+				Func_Var_9 = Func_Var_9 - 65536;
+			}
+			if( Func_Var_9 < 0 )
+			{
+				Func_Var_9 = 0 - Func_Var_9;
+			}
+			turn Leg5-0 to y-axis Func_Var_1 speed Func_Var_9;
+			Static_Var_48 = Func_Var_1;
+		}
+		else
+		{
+			turn Leg5-0 to y-axis Static_Var_48 now;
+		}
+		if( Func_Var_5 > Static_Var_50 + 182 OR Func_Var_5 < Static_Var_50 - 182 )
+		{
+			turn Leg5-2 to x-axis Static_Var_50 now;
+			Func_Var_9 = ( Func_Var_5 - Static_Var_50 ) * 1000 / 100;
+			while( Func_Var_9 < 0 )
+			{
+				Func_Var_9 = Func_Var_9 + 65536;
+			}
+			while( Func_Var_9 >= 32768 )
+			{
+				Func_Var_9 = Func_Var_9 - 65536;
+			}
+			if( Func_Var_9 < 0 )
+			{
+				Func_Var_9 = 0 - Func_Var_9;
+			}
+			turn Leg5-2 to x-axis Func_Var_5 speed Func_Var_9;
+			turn Leg5-3 to x-axis Static_Var_50 now;
+			Func_Var_9 = ( Func_Var_5 - Static_Var_50 ) * 1000 / 100;
+			while( Func_Var_9 < 0 )
+			{
+				Func_Var_9 = Func_Var_9 + 65536;
+			}
+			while( Func_Var_9 >= 32768 )
+			{
+				Func_Var_9 = Func_Var_9 - 65536;
+			}
+			if( Func_Var_9 < 0 )
+			{
+				Func_Var_9 = 0 - Func_Var_9;
+			}
+			turn Leg5-3 to x-axis Func_Var_5 speed Func_Var_9;
+			turn Leg5-4 to x-axis Static_Var_50 * <0.005495> / <0.010989> now;
+			Func_Var_9 = ( Func_Var_5 * 1 / 2 - Static_Var_50 * 1 / 2 ) * 1000 / 100;
+			while( Func_Var_9 < 0 )
+			{
+				Func_Var_9 = Func_Var_9 + 65536;
+			}
+			while( Func_Var_9 >= 32768 )
+			{
+				Func_Var_9 = Func_Var_9 - 65536;
+			}
+			if( Func_Var_9 < 0 )
+			{
+				Func_Var_9 = 0 - Func_Var_9;
+			}
+			turn Leg5-4 to x-axis Func_Var_5 * <0.005495> / <0.010989> speed Func_Var_9;
+			Static_Var_50 = Func_Var_5;
+		}
+		else
+		{
+			turn Leg5-2 to x-axis Static_Var_50 now;
+			turn Leg5-3 to x-axis Static_Var_50 now;
+			turn Leg5-4 to x-axis Static_Var_50 * <0.005495> / <0.010989> now;
+		}
+		if( Func_Var_2 > Static_Var_49 + 182 OR Func_Var_2 < Static_Var_49 - 182 )
+		{
+			turn Leg5-0 to x-axis Static_Var_49 now;
+			Func_Var_9 = ( Func_Var_2 - Static_Var_49 ) * 1000 / 100;
+			while( Func_Var_9 < 0 )
+			{
+				Func_Var_9 = Func_Var_9 + 65536;
+			}
+			while( Func_Var_9 >= 32768 )
+			{
+				Func_Var_9 = Func_Var_9 - 65536;
+			}
+			if( Func_Var_9 < 0 )
+			{
+				Func_Var_9 = 0 - Func_Var_9;
+			}
+			turn Leg5-0 to x-axis Func_Var_2 speed Func_Var_9;
+			Static_Var_49 = Func_Var_2;
+		}
+		else
+		{
+			turn Leg5-0 to x-axis Static_Var_49 now;
+		}
+		Func_Var_1 = get XZ_ATAN(get PIECE_XZ(Leg6-0) - get PIECE_XZ(Stride6));
+		turn Leg6-0 to y-axis Func_Var_1 now;
+		Func_Var_7 = 0;
+		Func_Var_8 = 16384;
+		Func_Var_3 = get HYPOT(get PIECE_Y(Leg6-0) - get PIECE_Y(Stride6),get XZ_HYPOT(get PIECE_XZ(Leg6-0) - get PIECE_XZ(Stride6)));
+		while( Func_Var_8 != 0 )
+		{
+			Func_Var_5 = Func_Var_7 + Func_Var_8;
+			turn Leg6-2 to x-axis Func_Var_5 now;
+			turn Leg6-3 to x-axis Func_Var_5 now;
+			turn Leg6-4 to x-axis Func_Var_5 * <0.005495> / <0.010989> now;
+			if( get HYPOT(get PIECE_Y(Leg6-0) - get PIECE_Y(End6),get XZ_HYPOT(get PIECE_XZ(Leg6-0) - get PIECE_XZ(End6))) > Func_Var_3 )
+			{
+				Func_Var_7 = Func_Var_7 + Func_Var_8;
+			}
+			Func_Var_8 = Func_Var_8 / 2;
+		}
+		turn Leg6-0 to x-axis <0.000000> now;
+		Func_Var_6 = get ATAN(get PIECE_Y(Leg6-0) - get PIECE_Y(End6),get XZ_HYPOT(get PIECE_XZ(Leg6-0) - get PIECE_XZ(End6)));
+		Func_Var_4 = get XZ_ATAN(get PIECE_XZ(End6) - get PIECE_XZ(Leg6-0)) - get XZ_ATAN(get PIECE_XZ(Stride6) - get PIECE_XZ(Leg6-0));
+		while( Func_Var_4 < 0 )
+		{
+			Func_Var_4 = Func_Var_4 + 65536;
+		}
+		while( Func_Var_4 >= 32768 )
+		{
+			Func_Var_4 = Func_Var_4 - 65536;
+		}
+		if( Func_Var_4 < 0 )
+		{
+			Func_Var_4 = 0 - Func_Var_4;
+		}
+		if( Func_Var_4 >= 16384 )
+		{
+			Func_Var_2 = get ATAN(get PIECE_Y(Leg6-0) - get PIECE_Y(Stride6),get XZ_HYPOT(get PIECE_XZ(Leg6-0) - get PIECE_XZ(Stride6))) + Func_Var_6 - 32768;
+		}
+		if( Func_Var_4 < 16384 )
+		{
+			Func_Var_2 = get ATAN(get PIECE_Y(Leg6-0) - get PIECE_Y(Stride6),get XZ_HYPOT(get PIECE_XZ(Leg6-0) - get PIECE_XZ(Stride6))) - Func_Var_6;
+		}
+		turn Leg6-0 to x-axis Func_Var_2 now;
+		if( Func_Var_1 > Static_Var_51 + 182 OR Func_Var_1 < Static_Var_51 - 182 )
+		{
+			turn Leg6-0 to y-axis Static_Var_51 now;
+			Func_Var_9 = ( Func_Var_1 - Static_Var_51 ) * 1000 / 100;
+			while( Func_Var_9 < 0 )
+			{
+				Func_Var_9 = Func_Var_9 + 65536;
+			}
+			while( Func_Var_9 >= 32768 )
+			{
+				Func_Var_9 = Func_Var_9 - 65536;
+			}
+			if( Func_Var_9 < 0 )
+			{
+				Func_Var_9 = 0 - Func_Var_9;
+			}
+			turn Leg6-0 to y-axis Func_Var_1 speed Func_Var_9;
+			Static_Var_51 = Func_Var_1;
+		}
+		else
+		{
+			turn Leg6-0 to y-axis Static_Var_51 now;
+		}
+		if( Func_Var_5 > Static_Var_53 + 182 OR Func_Var_5 < Static_Var_53 - 182 )
+		{
+			turn Leg6-2 to x-axis Static_Var_53 now;
+			Func_Var_9 = ( Func_Var_5 - Static_Var_53 ) * 1000 / 100;
+			while( Func_Var_9 < 0 )
+			{
+				Func_Var_9 = Func_Var_9 + 65536;
+			}
+			while( Func_Var_9 >= 32768 )
+			{
+				Func_Var_9 = Func_Var_9 - 65536;
+			}
+			if( Func_Var_9 < 0 )
+			{
+				Func_Var_9 = 0 - Func_Var_9;
+			}
+			turn Leg6-2 to x-axis Func_Var_5 speed Func_Var_9;
+			turn Leg6-3 to x-axis Static_Var_53 now;
+			Func_Var_9 = ( Func_Var_5 - Static_Var_53 ) * 1000 / 100;
+			while( Func_Var_9 < 0 )
+			{
+				Func_Var_9 = Func_Var_9 + 65536;
+			}
+			while( Func_Var_9 >= 32768 )
+			{
+				Func_Var_9 = Func_Var_9 - 65536;
+			}
+			if( Func_Var_9 < 0 )
+			{
+				Func_Var_9 = 0 - Func_Var_9;
+			}
+			turn Leg6-3 to x-axis Func_Var_5 speed Func_Var_9;
+			turn Leg6-4 to x-axis Static_Var_53 * <0.005495> / <0.010989> now;
+			Func_Var_9 = ( Func_Var_5 * 1 / 2 - Static_Var_53 * 1 / 2 ) * 1000 / 100;
+			while( Func_Var_9 < 0 )
+			{
+				Func_Var_9 = Func_Var_9 + 65536;
+			}
+			while( Func_Var_9 >= 32768 )
+			{
+				Func_Var_9 = Func_Var_9 - 65536;
+			}
+			if( Func_Var_9 < 0 )
+			{
+				Func_Var_9 = 0 - Func_Var_9;
+			}
+			turn Leg6-4 to x-axis Func_Var_5 * <0.005495> / <0.010989> speed Func_Var_9;
+			Static_Var_53 = Func_Var_5;
+		}
+		else
+		{
+			turn Leg6-2 to x-axis Static_Var_53 now;
+			turn Leg6-3 to x-axis Static_Var_53 now;
+			turn Leg6-4 to x-axis Static_Var_53 * <0.005495> / <0.010989> now;
+		}
+		if( Func_Var_2 > Static_Var_52 + 182 OR Func_Var_2 < Static_Var_52 - 182 )
+		{
+			turn Leg6-0 to x-axis Static_Var_52 now;
+			Func_Var_9 = ( Func_Var_2 - Static_Var_52 ) * 1000 / 100;
+			while( Func_Var_9 < 0 )
+			{
+				Func_Var_9 = Func_Var_9 + 65536;
+			}
+			while( Func_Var_9 >= 32768 )
+			{
+				Func_Var_9 = Func_Var_9 - 65536;
+			}
+			if( Func_Var_9 < 0 )
+			{
+				Func_Var_9 = 0 - Func_Var_9;
+			}
+			turn Leg6-0 to x-axis Func_Var_2 speed Func_Var_9;
+			Static_Var_52 = Func_Var_2;
+		}
+		else
+		{
+			turn Leg6-0 to x-axis Static_Var_52 now;
+		}
+		if( Static_Var_36 >= 8190 + 3185 )
+		{
+			Func_Var_10 = 1;
+		}
+		if( Static_Var_36 < 8190 - 3185 )
+		{
+			Func_Var_10 = 1;
+		}
+		if( Static_Var_39 >= 57330 + 3185 )
+		{
+			Func_Var_10 = 1;
+		}
+		if( Static_Var_39 < 57330 - 3185 )
+		{
+			Func_Var_10 = 1;
+		}
+		if( Static_Var_42 >= 16380 + 3185 )
+		{
+			Func_Var_10 = 1;
+		}
+		if( Static_Var_42 < 16380 - 3185 )
+		{
+			Func_Var_10 = 1;
+		}
+		if( Static_Var_45 >= 49140 + 3185 )
+		{
+			Func_Var_10 = 1;
+		}
+		if( Static_Var_45 < 49140 - 3185 )
+		{
+			Func_Var_10 = 1;
+		}
+		if( Static_Var_48 >= 24570 + 3185 )
+		{
+			Func_Var_10 = 1;
+		}
+		if( Static_Var_48 < 24570 - 3185 )
+		{
+			Func_Var_10 = 1;
+		}
+		if( Static_Var_51 >= 40950 + 3185 )
+		{
+			Func_Var_10 = 1;
+		}
+		if( Static_Var_51 < 40950 - 3185 )
+		{
+			Func_Var_10 = 1;
+		}
+		if( Func_Var_10 == 1 )
+		{
+			if( bMoving == 0 )
+			{
+				if( Static_Var_11 == 0 )
+				{
+					Static_Var_12 = 0;
+				}
+				if( Static_Var_11 == 1 )
+				{
+					Static_Var_4 = 0;
+				}
+				Func_Var_10 = 0;
+			}
+		}
+		sleep 100;
+	}
+}
+
+StrideEnded(Func_Var_1, Func_Var_2)
+{
+	move Crush_Shoulder to z-axis [0.000000] now;
+	move Crush_Shoulder to x-axis [0.000000] now;
+	move Crush_Shoulder to y-axis [0.000000] now;
+	move Crush_Arm to z-axis [0.000000] now;
+	move Crush_Arm to x-axis [0.000000] now;
+	move Crush_Arm to y-axis [0.000000] now;
+	if( 1 == Func_Var_1 )
+	{
+		if( Static_Var_25 == 5 )
+		{
+			Func_Var_2 = get PIECE_XZ(body) - get PIECE_XZ(Point1);
+			turn Crush_Shoulder to y-axis get XZ_ATAN(Func_Var_2) now;
+			move Crush_Arm to z-axis get XZ_HYPOT(Func_Var_2) now;
+			move Crush_Arm to y-axis get GROUND_HEIGHT(get PIECE_XZ(Point1)) - get PIECE_Y(Crush_Shoulder) now;
+			sleep 100;
+		}
+	}
+	if( 2 == Func_Var_1 )
+	{
+		Func_Var_2 = get PIECE_XZ(body) - get PIECE_XZ(Point2);
+		if( Static_Var_26 == 5 )
+		{
+			turn Crush_Shoulder to y-axis get XZ_ATAN(Func_Var_2) now;
+			move Crush_Arm to z-axis get XZ_HYPOT(Func_Var_2) now;
+			move Crush_Arm to y-axis get GROUND_HEIGHT(get PIECE_XZ(Point2)) - get PIECE_Y(Crush_Shoulder) now;
+			sleep 100;
+		}
+	}
+	if( 2 == Func_Var_1 )
+	{
+		if( Static_Var_27 == 5 AND Static_Var_33 == 1 )
+		{
+			Func_Var_2 = get PIECE_XZ(body) - get PIECE_XZ(Point3);
+			turn Crush_Shoulder to y-axis get XZ_ATAN(Func_Var_2) now;
+			move Crush_Arm to z-axis get XZ_HYPOT(Func_Var_2) now;
+			move Crush_Arm to y-axis get GROUND_HEIGHT(get PIECE_XZ(Point3)) - get PIECE_Y(Crush_Shoulder) now;
+			sleep 100;
+		}
+	}
+	if( 1 == Func_Var_1 )
+	{
+		if( Static_Var_28 == 5 AND Static_Var_33 == 1 )
+		{
+			Func_Var_2 = get PIECE_XZ(body) - get PIECE_XZ(Point4);
+			turn Crush_Shoulder to y-axis get XZ_ATAN(Func_Var_2) now;
+			move Crush_Arm to z-axis get XZ_HYPOT(Func_Var_2) now;
+			move Crush_Arm to y-axis get GROUND_HEIGHT(get PIECE_XZ(Point4)) - get PIECE_Y(Crush_Shoulder) now;
+			sleep 100;
+		}
+	}
+	if( 1 == Func_Var_1 )
+	{
+		if( Static_Var_29 == 5 )
+		{
+			Func_Var_2 = get PIECE_XZ(body) - get PIECE_XZ(Point5);
+			turn Crush_Shoulder to y-axis get XZ_ATAN(Func_Var_2) now;
+			move Crush_Arm to z-axis get XZ_HYPOT(Func_Var_2) now;
+			move Crush_Arm to y-axis get GROUND_HEIGHT(get PIECE_XZ(Point5)) - get PIECE_Y(Crush_Shoulder) now;
+			sleep 100;
+		}
+	}
+	if( 2 == Func_Var_1 )
+	{
+		if( Static_Var_30 == 5 )
+		{
+			Func_Var_2 = get PIECE_XZ(body) - get PIECE_XZ(Point6);
+			turn Crush_Shoulder to y-axis get XZ_ATAN(Func_Var_2) now;
+			move Crush_Arm to z-axis get XZ_HYPOT(Func_Var_2) now;
+			move Crush_Arm to y-axis get GROUND_HEIGHT(get PIECE_XZ(Point6)) - get PIECE_Y(Crush_Shoulder) now;
+			sleep 100;
+		}
+	}
+	move Crush_Shoulder to z-axis [-5785.600000] now;
+	move Crush_Shoulder to x-axis [5785.600000] now;
+	move Crush_Shoulder to y-axis [0.000000] now;
+	move Crush_Arm to z-axis [0.000000] now;
+	move Crush_Arm to x-axis [0.000000] now;
+	move Crush_Arm to y-axis [0.000000] now;
+}
+
+LegGroups(Func_Var_1, Func_Var_2, Func_Var_3, Func_Var_4, Func_Var_5, Func_Var_6, Func_Var_7, Func_Var_8, Func_Var_9, Func_Var_10, Func_Var_11, Func_Var_12, Func_Var_13, Func_Var_14, Func_Var_15, Func_Var_16)
+{
+	Static_Var_13 = get PIECE_XZ(Point1);
+	Static_Var_19 = get PIECE_XZ(Point4);
+	Static_Var_21 = get PIECE_XZ(Point5);
+	Static_Var_14 = get PIECE_Y(Point1);
+	Static_Var_20 = get PIECE_Y(Point4);
+	Static_Var_22 = get PIECE_Y(Point5);
+	Func_Var_8 = get PIECE_XZ(AnglePoint1);
+	Func_Var_10 = 0;
+	Func_Var_11 = [30.000000] / 1000 * 100;
+	Static_Var_15 = get PIECE_XZ(Point2);
+	Static_Var_17 = get PIECE_XZ(Point3);
+	Static_Var_23 = get PIECE_XZ(Point6);
+	Static_Var_16 = get PIECE_Y(Point2);
+	Static_Var_18 = get PIECE_Y(Point3);
+	Static_Var_24 = get PIECE_Y(Point6);
+	Func_Var_13 = get PIECE_XZ(AnglePoint2);
+	Func_Var_15 = 0;
+	Func_Var_16 = [30.000000] / 1000 * 100;
+	while( TRUE )
+	{
+		if( Static_Var_12 == 1 )
+		{
+			Func_Var_9 = get XZ_ATAN(Func_Var_8 - get PIECE_XZ(body));
+			turn Angular1 to y-axis Func_Var_9 now;
+			if( Static_Var_4 == 0 )
+			{
+				if( Func_Var_9 >= 32768 )
+				{
+					Func_Var_12 = Func_Var_9 - 65536;
+					turn Angular2 to y-axis <0.000000> - Func_Var_12 / <0.010989> + <360.087912> speed <60.000000>;
+				}
+				if( Func_Var_9 < 32768 )
+				{
+					turn Angular2 to y-axis <0.000000> - Func_Var_9 / <0.010989> speed <60.000000>;
+				}
+			}
+			Func_Var_2 = 0 - [80.000000];
+			Func_Var_3 = 0 - [80.000000];
+			Func_Var_4 = 0 - [80.000000];
+			Func_Var_1 = [80.000000];
+			while( Func_Var_1 != 0 )
+			{
+				Func_Var_5 = Func_Var_2 + Func_Var_1;
+				Func_Var_6 = Func_Var_3 + Func_Var_1;
+				Func_Var_7 = Func_Var_4 + Func_Var_1;
+				move Point1 to x-axis Func_Var_5 now;
+				move Point1 to z-axis Func_Var_6 now;
+				move Point1 to y-axis Func_Var_7 now;
+				if( get XZ_ATAN(Static_Var_13 - get PIECE_XZ(Point1)) > 0 AND get XZ_ATAN(Static_Var_13 - get PIECE_XZ(Point1)) < 32760 )
+				{
+					Func_Var_2 = Func_Var_5;
+				}
+				if( get XZ_ATAN(Static_Var_13 - get PIECE_XZ(Point1)) > 16380 AND get XZ_ATAN(Static_Var_13 - get PIECE_XZ(Point1)) < 49140 )
+				{
+					Func_Var_3 = Func_Var_6;
+				}
+				if( get ATAN(Static_Var_14 - get PIECE_Y(Point1),get XZ_HYPOT(Static_Var_13 - get PIECE_XZ(Point1))) < 16380 )
+				{
+					Func_Var_4 = Func_Var_7;
+				}
+				Func_Var_1 = Func_Var_1 / 2;
+			}
+			if( Static_Var_4 == 0 )
+			{
+				move Point6 to z-axis [0.000000] - Func_Var_6 / [0.000012] speed [30.000000];
+				move Point6 to x-axis [0.000000] - Func_Var_5 / [0.000012] speed [30.000000];
+			}
+			Func_Var_2 = 0 - [80.000000];
+			Func_Var_3 = 0 - [80.000000];
+			Func_Var_4 = 0 - [80.000000];
+			Func_Var_1 = [80.000000];
+			while( Func_Var_1 != 0 )
+			{
+				Func_Var_5 = Func_Var_2 + Func_Var_1;
+				Func_Var_6 = Func_Var_3 + Func_Var_1;
+				Func_Var_7 = Func_Var_4 + Func_Var_1;
+				move Point4 to x-axis Func_Var_5 now;
+				move Point4 to z-axis Func_Var_6 now;
+				move Point4 to y-axis Func_Var_7 now;
+				if( get XZ_ATAN(Static_Var_19 - get PIECE_XZ(Point4)) > 0 AND get XZ_ATAN(Static_Var_19 - get PIECE_XZ(Point4)) < 32760 )
+				{
+					Func_Var_2 = Func_Var_5;
+				}
+				if( get XZ_ATAN(Static_Var_19 - get PIECE_XZ(Point4)) > 16380 AND get XZ_ATAN(Static_Var_19 - get PIECE_XZ(Point4)) < 49140 )
+				{
+					Func_Var_3 = Func_Var_6;
+				}
+				if( get ATAN(Static_Var_20 - get PIECE_Y(Point4),get XZ_HYPOT(Static_Var_19 - get PIECE_XZ(Point4))) < 16380 )
+				{
+					Func_Var_4 = Func_Var_7;
+				}
+				Func_Var_1 = Func_Var_1 / 2;
+			}
+			if( Static_Var_4 == 0 )
+			{
+				move Point3 to z-axis [0.000000] - Func_Var_6 / [0.000012] speed [30.000000];
+				move Point3 to x-axis [0.000000] - Func_Var_5 / [0.000012] speed [30.000000];
+			}
+			Func_Var_2 = 0 - [80.000000];
+			Func_Var_3 = 0 - [80.000000];
+			Func_Var_4 = 0 - [80.000000];
+			Func_Var_1 = [80.000000];
+			while( Func_Var_1 != 0 )
+			{
+				Func_Var_5 = Func_Var_2 + Func_Var_1;
+				Func_Var_6 = Func_Var_3 + Func_Var_1;
+				Func_Var_7 = Func_Var_4 + Func_Var_1;
+				move Point5 to x-axis Func_Var_5 now;
+				move Point5 to z-axis Func_Var_6 now;
+				move Point5 to y-axis Func_Var_7 now;
+				if( get XZ_ATAN(Static_Var_21 - get PIECE_XZ(Point5)) > 0 AND get XZ_ATAN(Static_Var_21 - get PIECE_XZ(Point5)) < 32760 )
+				{
+					Func_Var_2 = Func_Var_5;
+				}
+				if( get XZ_ATAN(Static_Var_21 - get PIECE_XZ(Point5)) > 16380 AND get XZ_ATAN(Static_Var_21 - get PIECE_XZ(Point5)) < 49140 )
+				{
+					Func_Var_3 = Func_Var_6;
+				}
+				if( get ATAN(Static_Var_22 - get PIECE_Y(Point5),get XZ_HYPOT(Static_Var_21 - get PIECE_XZ(Point5))) < 16380 )
+				{
+					Func_Var_4 = Func_Var_7;
+				}
+				Func_Var_1 = Func_Var_1 / 2;
+			}
+			if( Static_Var_4 == 0 )
+			{
+				move Point2 to z-axis [0.000000] - Func_Var_6 / [0.000012] speed [30.000000];
+				move Point2 to x-axis [0.000000] - Func_Var_5 / [0.000012] speed [30.000000];
+			}
+			Func_Var_8 = get PIECE_XZ(AnglePoint1);
+		}
+		if( Static_Var_4 == 1 )
+		{
+			Func_Var_14 = get XZ_ATAN(Func_Var_13 - get PIECE_XZ(body));
+			turn Angular2 to y-axis Func_Var_14 now;
+			if( Static_Var_12 == 0 )
+			{
+				if( Func_Var_14 >= 32768 )
+				{
+					Func_Var_12 = Func_Var_14 - 65536;
+					turn Angular1 to y-axis <0.000000> - Func_Var_12 / <0.010989> + <360.087912> speed <60.000000>;
+				}
+				if( Func_Var_14 < 32768 )
+				{
+					turn Angular1 to y-axis <0.000000> - Func_Var_14 / <0.010989> speed <60.000000>;
+				}
+			}
+			Func_Var_2 = 0 - [80.000000];
+			Func_Var_3 = 0 - [80.000000];
+			Func_Var_4 = 0 - [80.000000];
+			Func_Var_1 = [80.000000];
+			while( Func_Var_1 != 0 )
+			{
+				Func_Var_5 = Func_Var_2 + Func_Var_1;
+				Func_Var_6 = Func_Var_3 + Func_Var_1;
+				Func_Var_7 = Func_Var_4 + Func_Var_1;
+				move Point2 to x-axis Func_Var_5 now;
+				move Point2 to z-axis Func_Var_6 now;
+				move Point2 to y-axis Func_Var_7 now;
+				if( get XZ_ATAN(Static_Var_15 - get PIECE_XZ(Point2)) > 0 AND get XZ_ATAN(Static_Var_15 - get PIECE_XZ(Point2)) < 32760 )
+				{
+					Func_Var_2 = Func_Var_5;
+				}
+				if( get XZ_ATAN(Static_Var_15 - get PIECE_XZ(Point2)) > 16380 AND get XZ_ATAN(Static_Var_15 - get PIECE_XZ(Point2)) < 49140 )
+				{
+					Func_Var_3 = Func_Var_6;
+				}
+				if( get ATAN(Static_Var_16 - get PIECE_Y(Point2),get XZ_HYPOT(Static_Var_15 - get PIECE_XZ(Point2))) < 16380 )
+				{
+					Func_Var_4 = Func_Var_7;
+				}
+				Func_Var_1 = Func_Var_1 / 2;
+			}
+			if( Static_Var_12 == 0 )
+			{
+				move Point5 to z-axis [0.000000] - Func_Var_6 / [0.000012] speed [30.000000];
+				move Point5 to x-axis [0.000000] - Func_Var_5 / [0.000012] speed [30.000000];
+			}
+			Func_Var_2 = 0 - [80.000000];
+			Func_Var_3 = 0 - [80.000000];
+			Func_Var_4 = 0 - [80.000000];
+			Func_Var_1 = [80.000000];
+			while( Func_Var_1 != 0 )
+			{
+				Func_Var_5 = Func_Var_2 + Func_Var_1;
+				Func_Var_6 = Func_Var_3 + Func_Var_1;
+				Func_Var_7 = Func_Var_4 + Func_Var_1;
+				move Point3 to x-axis Func_Var_5 now;
+				move Point3 to z-axis Func_Var_6 now;
+				move Point3 to y-axis Func_Var_7 now;
+				if( get XZ_ATAN(Static_Var_17 - get PIECE_XZ(Point3)) > 0 AND get XZ_ATAN(Static_Var_17 - get PIECE_XZ(Point3)) < 32760 )
+				{
+					Func_Var_2 = Func_Var_5;
+				}
+				if( get XZ_ATAN(Static_Var_17 - get PIECE_XZ(Point3)) > 16380 AND get XZ_ATAN(Static_Var_17 - get PIECE_XZ(Point3)) < 49140 )
+				{
+					Func_Var_3 = Func_Var_6;
+				}
+				if( get ATAN(Static_Var_18 - get PIECE_Y(Point3),get XZ_HYPOT(Static_Var_17 - get PIECE_XZ(Point3))) < 16380 )
+				{
+					Func_Var_4 = Func_Var_7;
+				}
+				Func_Var_1 = Func_Var_1 / 2;
+			}
+			if( Static_Var_12 == 0 )
+			{
+				move Point4 to z-axis [0.000000] - Func_Var_6 / [0.000012] speed [30.000000];
+				move Point4 to x-axis [0.000000] - Func_Var_5 / [0.000012] speed [30.000000];
+			}
+			Func_Var_2 = 0 - [80.000000];
+			Func_Var_3 = 0 - [80.000000];
+			Func_Var_4 = 0 - [80.000000];
+			Func_Var_1 = [80.000000];
+			while( Func_Var_1 != 0 )
+			{
+				Func_Var_5 = Func_Var_2 + Func_Var_1;
+				Func_Var_6 = Func_Var_3 + Func_Var_1;
+				Func_Var_7 = Func_Var_4 + Func_Var_1;
+				move Point6 to x-axis Func_Var_5 now;
+				move Point6 to z-axis Func_Var_6 now;
+				move Point6 to y-axis Func_Var_7 now;
+				if( get XZ_ATAN(Static_Var_23 - get PIECE_XZ(Point6)) > 0 AND get XZ_ATAN(Static_Var_23 - get PIECE_XZ(Point6)) < 32760 )
+				{
+					Func_Var_2 = Func_Var_5;
+				}
+				if( get XZ_ATAN(Static_Var_23 - get PIECE_XZ(Point6)) > 16380 AND get XZ_ATAN(Static_Var_23 - get PIECE_XZ(Point6)) < 49140 )
+				{
+					Func_Var_3 = Func_Var_6;
+				}
+				if( get ATAN(Static_Var_24 - get PIECE_Y(Point6),get XZ_HYPOT(Static_Var_23 - get PIECE_XZ(Point6))) < 16380 )
+				{
+					Func_Var_4 = Func_Var_7;
+				}
+				Func_Var_1 = Func_Var_1 / 2;
+			}
+			if( Static_Var_12 == 0 )
+			{
+				move Point1 to z-axis [0.000000] - Func_Var_6 / [0.000012] speed [30.000000];
+				move Point1 to x-axis [0.000000] - Func_Var_5 / [0.000012] speed [30.000000];
+			}
+			Func_Var_13 = get PIECE_XZ(AnglePoint2);
+		}
+		if( Static_Var_12 == 0 )
+		{
+			Func_Var_10 = Func_Var_10 + Func_Var_11;
+			Func_Var_11 = Func_Var_11 - 2 * [30.000000] / 1000 * 100 / 500 / 100;
+			move Stride1 to y-axis Func_Var_10 now;
+			move Stride4 to y-axis Func_Var_10 now;
+			move Stride5 to y-axis Func_Var_10 now;
+			if( Func_Var_10 <= 0 )
+			{
+				move Stride1 to y-axis [0.000000] now;
+				move Stride4 to y-axis [0.000000] now;
+				move Stride5 to y-axis [0.000000] now;
+				Static_Var_13 = get PIECE_XZ(Point1);
+				Static_Var_19 = get PIECE_XZ(Point4);
+				Static_Var_21 = get PIECE_XZ(Point5);
+				Static_Var_14 = get PIECE_Y(Point1);
+				Static_Var_20 = get PIECE_Y(Point4);
+				Static_Var_22 = get PIECE_Y(Point5);
+				Func_Var_8 = get PIECE_XZ(AnglePoint1);
+				Static_Var_11 = 1;
+				Static_Var_12 = 1;
+				Func_Var_10 = 0;
+				Func_Var_11 = [30.000000] / 1000 * 100;
+				if( bMoving == 1 )
+				{
+					Static_Var_4 = 0;
+				}
+				start-script StrideEnded(1);
+			}
+		}
+		if( Static_Var_4 == 0 )
+		{
+			Func_Var_15 = Func_Var_15 + Func_Var_16;
+			Func_Var_16 = Func_Var_16 - 2 * [30.000000] / 1000 * 100 / 500 / 100;
+			move Stride2 to y-axis Func_Var_15 now;
+			move Stride3 to y-axis Func_Var_15 now;
+			move Stride6 to y-axis Func_Var_15 now;
+			if( Func_Var_15 <= 0 )
+			{
+				move Stride2 to y-axis [0.000000] now;
+				move Stride3 to y-axis [0.000000] now;
+				move Stride6 to y-axis [0.000000] now;
+				Static_Var_15 = get PIECE_XZ(Point2);
+				Static_Var_17 = get PIECE_XZ(Point3);
+				Static_Var_23 = get PIECE_XZ(Point6);
+				Static_Var_16 = get PIECE_Y(Point2);
+				Static_Var_18 = get PIECE_Y(Point3);
+				Static_Var_24 = get PIECE_Y(Point6);
+				Func_Var_13 = get PIECE_XZ(AnglePoint2);
+				Static_Var_11 = 0;
+				Static_Var_4 = 1;
+				Func_Var_15 = 0;
+				Func_Var_16 = [30.000000] / 1000 * 100;
+				if( bMoving == 1 )
+				{
+					Static_Var_12 = 0;
+				}
+				start-script StrideEnded(2);
+			}
+		}
+		sleep 100;
+	}
+}
+
+RestoreAll()
+{
+	bAiming = FALSE;
+	signal SIG_AIM_3;
+	signal SIG_AIM;
+	signal SIG_AIM_2;
+	set-signal-mask 0;
+	turn brawl to y-axis <0.000000> speed <450.000000>;
+}
+
+SmokeUnit(healthpercent, sleeptime, smoketype)
+{
+	while( TRUE )
+	{
+		healthpercent = get HEALTH;
+		if( healthpercent < 66 )
+		{
+			smoketype = 256 | 2;
+			if( Rand( 1, 66 ) < healthpercent )
+			{
+				smoketype = 256 | 1;
+			}
+			emit-sfx 256 | 2 from body;
+			emit-sfx 256 | 2 from Leg1-1;
+			emit-sfx 256 | 2 from Leg3-2;
+			emit-sfx 256 | 2 from Leg4-3;
+			emit-sfx 256 | 2 from Leg6-2;
+		}
+		if( get HEALTH < 35 AND Static_Var_33 == 1 )
+		{
+			if( Static_Var_26 == 5 )
+			{
+				explode Leg2-4 type FALL | SMOKE | FIRE | EXPLODE_ON_HIT | BITMAP5;
+				explode Foot2 type FALL | SMOKE | FIRE | EXPLODE_ON_HIT | BITMAP5;
+				dont-cache Leg2-4;
+				dont-cache Foot2;
+				--Static_Var_26;
+			}
+			if( Static_Var_26 == 4 )
+			{
+				explode Leg2-3 type FALL | SMOKE | FIRE | EXPLODE_ON_HIT | BITMAP5;
+				dont-cache Leg2-3;
+				--Static_Var_26;
+			}
+		}
+		if( get HEALTH < 30 AND Static_Var_33 == 1 )
+		{
+			if( Static_Var_26 == 3 )
+			{
+				explode Leg2-2 type FALL | SMOKE | FIRE | EXPLODE_ON_HIT | BITMAP5;
+				dont-cache Leg2-2;
+				--Static_Var_26;
+			}
+		}
+		if( get HEALTH < 25 AND Static_Var_33 == 1 )
+		{
+			if( Static_Var_27 == 5 )
+			{
+				explode Leg3-4 type FALL | SMOKE | FIRE | EXPLODE_ON_HIT | BITMAP5;
+				explode Foot3 type FALL | SMOKE | FIRE | EXPLODE_ON_HIT | BITMAP5;
+				dont-cache Leg3-4;
+				dont-cache Foot3;
+				--Static_Var_27;
+			}
+			if( Static_Var_27 == 4 )
+			{
+				explode Leg3-3 type FALL | SMOKE | FIRE | EXPLODE_ON_HIT | BITMAP5;
+				dont-cache Leg3-3;
+				--Static_Var_27;
+			}
+			if( Static_Var_27 == 3 )
+			{
+				explode Leg3-2 type FALL | SMOKE | FIRE | EXPLODE_ON_HIT | BITMAP5;
+				dont-cache Leg3-2;
+				--Static_Var_27;
+			}
+		}
+		if( get HEALTH < 15 AND Static_Var_33 == 1 )
+		{
+			if( Static_Var_27 == 2 )
+			{
+				explode Leg3-1 type FALL | SMOKE | FIRE | EXPLODE_ON_HIT | BITMAP5;
+				dont-cache Leg3-1;
+				--Static_Var_27;
+			}
+		}
+		if( get HEALTH < 10 AND Static_Var_33 == 1 )
+		{
+			if( Static_Var_29 == 5 )
+			{
+				explode Leg5-4 type SHATTER | BITMAP5;
+				explode Foot5 type SHATTER | BITMAP5;
+				dont-cache Leg5-4;
+				dont-cache Foot5;
+				--Static_Var_29;
+			}
+			if( Static_Var_29 == 4 )
+			{
+				explode Leg5-3 type FALL | SMOKE | FIRE | EXPLODE_ON_HIT | BITMAP5;
+				dont-cache Leg5-3;
+				--Static_Var_29;
+			}
+			if( Static_Var_29 == 3 )
+			{
+				explode Leg5-2 type FALL | SMOKE | FIRE | EXPLODE_ON_HIT | BITMAP5;
+				dont-cache Leg5-2;
+				--Static_Var_29;
+			}
+		}
+		if( get HEALTH < 5 AND Static_Var_33 == 1 )
+		{
+			if( Static_Var_26 == 2 )
+			{
+				explode Leg2-1 type FALL | SMOKE | FIRE | EXPLODE_ON_HIT | BITMAP5;
+				dont-cache Leg2-1;
+				--Static_Var_26;
+			}
+		}
+		if( get HEALTH >= 7 AND Static_Var_26 == 1 )
+		{
+			show Leg2-1;
+			cache Leg2-1;
+			++Static_Var_26;
+		}
+		if( get HEALTH >= 12 AND Static_Var_29 == 2 )
+		{
+			show Leg5-2;
+			cache Leg5-2;
+			++Static_Var_29;
+		}
+		if( get HEALTH >= 15 AND Static_Var_29 == 3 )
+		{
+			show Leg5-3;
+			cache Leg5-3;
+			++Static_Var_29;
+		}
+		if( get HEALTH >= 18 AND Static_Var_29 == 4 )
+		{
+			show Leg5-4;
+			show Foot5;
+			cache Leg5-4;
+			cache Foot5;
+			++Static_Var_29;
+		}
+		if( get HEALTH >= 20 AND Static_Var_27 == 1 )
+		{
+			show Leg3-1;
+			cache Leg3-1;
+			++Static_Var_27;
+		}
+		if( get HEALTH >= 27 AND Static_Var_27 == 2 AND Static_Var_33 == 1 )
+		{
+			show Leg3-2;
+			cache Leg3-2;
+			++Static_Var_27;
+		}
+		if( get HEALTH >= 29 AND Static_Var_27 == 3 AND Static_Var_33 == 1 )
+		{
+			show Leg3-3;
+			cache Leg3-3;
+			++Static_Var_27;
+		}
+		if( get HEALTH >= 31 AND Static_Var_27 == 4 AND Static_Var_33 == 1 )
+		{
+			show Leg3-4;
+			show Foot3;
+			cache Leg3-4;
+			cache Foot3;
+			++Static_Var_27;
+		}
+		if( get HEALTH >= 35 AND Static_Var_26 == 2 )
+		{
+			show Leg2-2;
+			cache Leg2-2;
+			++Static_Var_26;
+		}
+		if( get HEALTH > 38 AND Static_Var_26 == 3 )
+		{
+			show Leg2-3;
+			cache Leg2-3;
+			++Static_Var_26;
+		}
+		if( get HEALTH > 41 AND Static_Var_26 == 4 )
+		{
+			show Leg2-4;
+			show Foot2;
+			cache Leg2-4;
+			cache Foot2;
+			++Static_Var_26;
+		}
+		if( bMoving OR sleeptime < 200 )
+		{
+			sleeptime = 200;
+		}
+		if( !bMoving )
+		{
+			sleeptime = healthpercent * 50;
+		}
+		sleep sleeptime;
+		if( bAiming > 0 )
+		{
+			bAiming = bAiming - sleeptime;
+			if( bAiming < 1 )
+			{
+				start-script RestoreAll();
+			}
+		}
+	}
+}
+
+StartMoving()
+{
+	signal SIG_MOVE;
+	set-signal-mask SIG_MOVE;
+	bMoving = TRUE;
+	if( Static_Var_11 == 0 )
+	{
+		Static_Var_12 = 0;
+	}
+	if( Static_Var_11 == 1 )
+	{
+		Static_Var_4 = 0;
+	}
+	while( TRUE )
+	{
+		if( Static_Var_8 == 3 )
+		{
+			emit-sfx 259 from End1;
+			emit-sfx 259 from End2;
+			emit-sfx 259 from End3;
+			emit-sfx 259 from End4;
+			emit-sfx 259 from End5;
+			emit-sfx 259 from End6;
+		}
+		if( Static_Var_8 == 2 )
+		{
+			emit-sfx 259 from End1;
+			emit-sfx 259 from End2;
+			emit-sfx 259 from End3;
+			emit-sfx 259 from End4;
+			emit-sfx 259 from End5;
+			emit-sfx 259 from End6;
+		}
+		if( Static_Var_8 == 1 )
+		{
+			emit-sfx 3 from End1;
+			emit-sfx 3 from End2;
+			emit-sfx 3 from End3;
+			emit-sfx 3 from End4;
+			emit-sfx 3 from End5;
+			emit-sfx 3 from End6;
+		}
+		sleep Rand( 200, 300 );
+	}
+}
+
+StopMoving()
+{
+	signal SIG_MOVE;
+	bMoving = FALSE;
+	sleep 500;
+}
+
+activatescr()
+{
+	if( TRUE )
+	{
+		sleep 770;
+	}
+	sleep 20;
+}
+
+deactivatescr()
+{
+	if( TRUE )
+	{
+		sleep 570;
+	}
+	sleep 10;
+}
+
+InitState()
+{
+	statechg_DesiredState = TRUE;
+	statechg_StateChanging = FALSE;
+}
+
+RequestState(requestedstate, currentstate)
+{
+	if( statechg_StateChanging )
+	{
+		statechg_DesiredState = requestedstate;
+		return (0);
+	}
+	statechg_StateChanging = TRUE;
+	currentstate = statechg_DesiredState;
+	statechg_DesiredState = requestedstate;
+	while( statechg_DesiredState != currentstate )
+	{
+		if( statechg_DesiredState == 0 )
+		{
+			call-script activatescr();
+			currentstate = 0;
+		}
+		if( statechg_DesiredState == 1 )
+		{
+			call-script deactivatescr();
+			currentstate = 1;
+		}
+	}
+	statechg_StateChanging = FALSE;
+}
+
+setSFXoccupy(Func_Var_1)
+{
+	Static_Var_8 = Func_Var_1;
+}
+
+Create(Func_Var_1, Func_Var_2, Func_Var_3, Func_Var_4, Func_Var_5, Func_Var_6, Func_Var_7, Func_Var_8, Func_Var_9)
+{
+	move Crush_Shoulder to z-axis [-5785.600000] now;
+	move Crush_Shoulder to x-axis [5785.600000] now;
+	move Crush_Shoulder to y-axis [0.000000] now;
+	move Crush_Arm to z-axis [0.000000] now;
+	move Crush_Arm to x-axis [0.000000] now;
+	move Crush_Arm to y-axis [0.000000] now;
+	Static_Var_11 = 0;
+	Static_Var_12 = 1;
+	Static_Var_4 = 1;
+	set ARMORED to 1;
+	bMoving = FALSE;
+	gun_1 = emg1;
+	Static_Var_7 = 0;
+	Static_Var_8 = 4;
+	Static_Var_9 = 600;
+	Static_Var_3 = 0;
+	hide glow2;
+	Static_Var_25 = 5;
+	Static_Var_26 = 5;
+	Static_Var_27 = 5;
+	Static_Var_28 = 5;
+	Static_Var_29 = 5;
+	Static_Var_30 = 5;
+	Static_Var_31 = 5;
+	Static_Var_32 = 5;
+	move Shell to y-axis [10.000000] now;
+	Func_Var_1 = get XZ_ATAN(get PIECE_XZ(Leg1-0) - get PIECE_XZ(Stride1));
+	turn Leg1-0 to y-axis Func_Var_1 now;
+	Func_Var_7 = 0;
+	Func_Var_8 = 16384;
+	Func_Var_3 = get HYPOT(get PIECE_Y(Leg1-0) - get PIECE_Y(Stride1),get XZ_HYPOT(get PIECE_XZ(Leg1-0) - get PIECE_XZ(Stride1)));
+	while( Func_Var_8 != 0 )
+	{
+		Func_Var_5 = Func_Var_7 + Func_Var_8;
+		turn Leg1-2 to x-axis Func_Var_5 now;
+		turn Leg1-3 to x-axis Func_Var_5 now;
+		turn Leg1-4 to x-axis Func_Var_5 * <0.005495> / <0.010989> now;
+		if( get HYPOT(get PIECE_Y(Leg1-0) - get PIECE_Y(End1),get XZ_HYPOT(get PIECE_XZ(Leg1-0) - get PIECE_XZ(End1))) > Func_Var_3 )
+		{
+			Func_Var_7 = Func_Var_7 + Func_Var_8;
+		}
+		Func_Var_8 = Func_Var_8 / 2;
+	}
+	turn Leg1-0 to x-axis <0.000000> now;
+	Func_Var_6 = get ATAN(get PIECE_Y(Leg1-0) - get PIECE_Y(End1),get XZ_HYPOT(get PIECE_XZ(Leg1-0) - get PIECE_XZ(End1)));
+	Func_Var_4 = get XZ_ATAN(get PIECE_XZ(End1) - get PIECE_XZ(Leg1-0)) - get XZ_ATAN(get PIECE_XZ(Stride1) - get PIECE_XZ(Leg1-0));
+	while( Func_Var_4 < 0 )
+	{
+		Func_Var_4 = Func_Var_4 + 65536;
+	}
+	while( Func_Var_4 >= 32768 )
+	{
+		Func_Var_4 = Func_Var_4 - 65536;
+	}
+	if( Func_Var_4 < 0 )
+	{
+		Func_Var_4 = 0 - Func_Var_4;
+	}
+	if( Func_Var_4 >= 16384 )
+	{
+		Func_Var_2 = get ATAN(get PIECE_Y(Leg1-0) - get PIECE_Y(Stride1),get XZ_HYPOT(get PIECE_XZ(Leg1-0) - get PIECE_XZ(Stride1))) + Func_Var_6 - 32768;
+	}
+	if( Func_Var_4 < 16384 )
+	{
+		Func_Var_2 = get ATAN(get PIECE_Y(Leg1-0) - get PIECE_Y(Stride1),get XZ_HYPOT(get PIECE_XZ(Leg1-0) - get PIECE_XZ(Stride1))) - Func_Var_6;
+	}
+	turn Leg1-0 to x-axis Func_Var_2 now;
+	Static_Var_36 = Func_Var_1;
+	Static_Var_37 = Func_Var_2;
+	Static_Var_38 = Func_Var_5;
+	Func_Var_1 = get XZ_ATAN(get PIECE_XZ(Leg2-0) - get PIECE_XZ(Stride2));
+	turn Leg2-0 to y-axis Func_Var_1 now;
+	Func_Var_7 = 0;
+	Func_Var_8 = 16384;
+	Func_Var_3 = get HYPOT(get PIECE_Y(Leg2-0) - get PIECE_Y(Stride2),get XZ_HYPOT(get PIECE_XZ(Leg2-0) - get PIECE_XZ(Stride2)));
+	while( Func_Var_8 != 0 )
+	{
+		Func_Var_5 = Func_Var_7 + Func_Var_8;
+		turn Leg2-2 to x-axis Func_Var_5 now;
+		turn Leg2-3 to x-axis Func_Var_5 now;
+		turn Leg2-4 to x-axis Func_Var_5 * <0.005495> / <0.010989> now;
+		if( get HYPOT(get PIECE_Y(Leg2-0) - get PIECE_Y(End2),get XZ_HYPOT(get PIECE_XZ(Leg2-0) - get PIECE_XZ(End2))) > Func_Var_3 )
+		{
+			Func_Var_7 = Func_Var_7 + Func_Var_8;
+		}
+		Func_Var_8 = Func_Var_8 / 2;
+	}
+	turn Leg2-0 to x-axis <0.000000> now;
+	Func_Var_6 = get ATAN(get PIECE_Y(Leg2-0) - get PIECE_Y(End2),get XZ_HYPOT(get PIECE_XZ(Leg2-0) - get PIECE_XZ(End2)));
+	Func_Var_4 = get XZ_ATAN(get PIECE_XZ(End2) - get PIECE_XZ(Leg2-0)) - get XZ_ATAN(get PIECE_XZ(Stride2) - get PIECE_XZ(Leg2-0));
+	while( Func_Var_4 < 0 )
+	{
+		Func_Var_4 = Func_Var_4 + 65536;
+	}
+	while( Func_Var_4 >= 32768 )
+	{
+		Func_Var_4 = Func_Var_4 - 65536;
+	}
+	if( Func_Var_4 < 0 )
+	{
+		Func_Var_4 = 0 - Func_Var_4;
+	}
+	if( Func_Var_4 >= 16384 )
+	{
+		Func_Var_2 = get ATAN(get PIECE_Y(Leg2-0) - get PIECE_Y(Stride2),get XZ_HYPOT(get PIECE_XZ(Leg2-0) - get PIECE_XZ(Stride2))) + Func_Var_6 - 32768;
+	}
+	if( Func_Var_4 < 16384 )
+	{
+		Func_Var_2 = get ATAN(get PIECE_Y(Leg2-0) - get PIECE_Y(Stride2),get XZ_HYPOT(get PIECE_XZ(Leg2-0) - get PIECE_XZ(Stride2))) - Func_Var_6;
+	}
+	turn Leg2-0 to x-axis Func_Var_2 now;
+	Static_Var_39 = Func_Var_1;
+	Static_Var_40 = Func_Var_2;
+	Static_Var_41 = Func_Var_5;
+	Func_Var_1 = get XZ_ATAN(get PIECE_XZ(Leg3-0) - get PIECE_XZ(Stride3));
+	turn Leg3-0 to y-axis Func_Var_1 now;
+	Func_Var_7 = 0;
+	Func_Var_8 = 16384;
+	Func_Var_3 = get HYPOT(get PIECE_Y(Leg3-0) - get PIECE_Y(Stride3),get XZ_HYPOT(get PIECE_XZ(Leg3-0) - get PIECE_XZ(Stride3)));
+	while( Func_Var_8 != 0 )
+	{
+		Func_Var_5 = Func_Var_7 + Func_Var_8;
+		turn Leg3-2 to x-axis Func_Var_5 now;
+		turn Leg3-3 to x-axis Func_Var_5 now;
+		turn Leg3-4 to x-axis Func_Var_5 * <0.005495> / <0.010989> now;
+		if( get HYPOT(get PIECE_Y(Leg3-0) - get PIECE_Y(End3),get XZ_HYPOT(get PIECE_XZ(Leg3-0) - get PIECE_XZ(End3))) > Func_Var_3 )
+		{
+			Func_Var_7 = Func_Var_7 + Func_Var_8;
+		}
+		Func_Var_8 = Func_Var_8 / 2;
+	}
+	turn Leg3-0 to x-axis <0.000000> now;
+	Func_Var_6 = get ATAN(get PIECE_Y(Leg3-0) - get PIECE_Y(End3),get XZ_HYPOT(get PIECE_XZ(Leg3-0) - get PIECE_XZ(End3)));
+	Func_Var_4 = get XZ_ATAN(get PIECE_XZ(End3) - get PIECE_XZ(Leg3-0)) - get XZ_ATAN(get PIECE_XZ(Stride3) - get PIECE_XZ(Leg3-0));
+	while( Func_Var_4 < 0 )
+	{
+		Func_Var_4 = Func_Var_4 + 65536;
+	}
+	while( Func_Var_4 >= 32768 )
+	{
+		Func_Var_4 = Func_Var_4 - 65536;
+	}
+	if( Func_Var_4 < 0 )
+	{
+		Func_Var_4 = 0 - Func_Var_4;
+	}
+	if( Func_Var_4 >= 16384 )
+	{
+		Func_Var_2 = get ATAN(get PIECE_Y(Leg3-0) - get PIECE_Y(Stride3),get XZ_HYPOT(get PIECE_XZ(Leg3-0) - get PIECE_XZ(Stride3))) + Func_Var_6 - 32768;
+	}
+	if( Func_Var_4 < 16384 )
+	{
+		Func_Var_2 = get ATAN(get PIECE_Y(Leg3-0) - get PIECE_Y(Stride3),get XZ_HYPOT(get PIECE_XZ(Leg3-0) - get PIECE_XZ(Stride3))) - Func_Var_6;
+	}
+	turn Leg3-0 to x-axis Func_Var_2 now;
+	Static_Var_42 = Func_Var_1;
+	Static_Var_43 = Func_Var_2;
+	Static_Var_44 = Func_Var_5;
+	Func_Var_1 = get XZ_ATAN(get PIECE_XZ(Leg4-0) - get PIECE_XZ(Stride4));
+	turn Leg4-0 to y-axis Func_Var_1 now;
+	Func_Var_7 = 0;
+	Func_Var_8 = 16384;
+	Func_Var_3 = get HYPOT(get PIECE_Y(Leg4-0) - get PIECE_Y(Stride4),get XZ_HYPOT(get PIECE_XZ(Leg4-0) - get PIECE_XZ(Stride4)));
+	while( Func_Var_8 != 0 )
+	{
+		Func_Var_5 = Func_Var_7 + Func_Var_8;
+		turn Leg4-2 to x-axis Func_Var_5 now;
+		turn Leg4-3 to x-axis Func_Var_5 now;
+		turn Leg4-4 to x-axis Func_Var_5 * <0.005495> / <0.010989> now;
+		if( get HYPOT(get PIECE_Y(Leg4-0) - get PIECE_Y(End4),get XZ_HYPOT(get PIECE_XZ(Leg4-0) - get PIECE_XZ(End4))) > Func_Var_3 )
+		{
+			Func_Var_7 = Func_Var_7 + Func_Var_8;
+		}
+		Func_Var_8 = Func_Var_8 / 2;
+	}
+	turn Leg4-0 to x-axis <0.000000> now;
+	Func_Var_6 = get ATAN(get PIECE_Y(Leg4-0) - get PIECE_Y(End4),get XZ_HYPOT(get PIECE_XZ(Leg4-0) - get PIECE_XZ(End4)));
+	Func_Var_4 = get XZ_ATAN(get PIECE_XZ(End4) - get PIECE_XZ(Leg4-0)) - get XZ_ATAN(get PIECE_XZ(Stride4) - get PIECE_XZ(Leg4-0));
+	while( Func_Var_4 < 0 )
+	{
+		Func_Var_4 = Func_Var_4 + 65536;
+	}
+	while( Func_Var_4 >= 32768 )
+	{
+		Func_Var_4 = Func_Var_4 - 65536;
+	}
+	if( Func_Var_4 < 0 )
+	{
+		Func_Var_4 = 0 - Func_Var_4;
+	}
+	if( Func_Var_4 >= 16384 )
+	{
+		Func_Var_2 = get ATAN(get PIECE_Y(Leg4-0) - get PIECE_Y(Stride4),get XZ_HYPOT(get PIECE_XZ(Leg4-0) - get PIECE_XZ(Stride4))) + Func_Var_6 - 32768;
+	}
+	if( Func_Var_4 < 16384 )
+	{
+		Func_Var_2 = get ATAN(get PIECE_Y(Leg4-0) - get PIECE_Y(Stride4),get XZ_HYPOT(get PIECE_XZ(Leg4-0) - get PIECE_XZ(Stride4))) - Func_Var_6;
+	}
+	turn Leg4-0 to x-axis Func_Var_2 now;
+	Static_Var_45 = Func_Var_1;
+	Static_Var_46 = Func_Var_2;
+	Static_Var_47 = Func_Var_5;
+	Func_Var_1 = get XZ_ATAN(get PIECE_XZ(Leg5-0) - get PIECE_XZ(Stride5));
+	turn Leg5-0 to y-axis Func_Var_1 now;
+	Func_Var_7 = 0;
+	Func_Var_8 = 16384;
+	Func_Var_3 = get HYPOT(get PIECE_Y(Leg5-0) - get PIECE_Y(Stride5),get XZ_HYPOT(get PIECE_XZ(Leg5-0) - get PIECE_XZ(Stride5)));
+	while( Func_Var_8 != 0 )
+	{
+		Func_Var_5 = Func_Var_7 + Func_Var_8;
+		turn Leg5-2 to x-axis Func_Var_5 now;
+		turn Leg5-3 to x-axis Func_Var_5 now;
+		turn Leg5-4 to x-axis Func_Var_5 * <0.005495> / <0.010989> now;
+		if( get HYPOT(get PIECE_Y(Leg5-0) - get PIECE_Y(End5),get XZ_HYPOT(get PIECE_XZ(Leg5-0) - get PIECE_XZ(End5))) > Func_Var_3 )
+		{
+			Func_Var_7 = Func_Var_7 + Func_Var_8;
+		}
+		Func_Var_8 = Func_Var_8 / 2;
+	}
+	turn Leg5-0 to x-axis <0.000000> now;
+	Func_Var_6 = get ATAN(get PIECE_Y(Leg5-0) - get PIECE_Y(End5),get XZ_HYPOT(get PIECE_XZ(Leg5-0) - get PIECE_XZ(End5)));
+	Func_Var_4 = get XZ_ATAN(get PIECE_XZ(End5) - get PIECE_XZ(Leg5-0)) - get XZ_ATAN(get PIECE_XZ(Stride5) - get PIECE_XZ(Leg5-0));
+	while( Func_Var_4 < 0 )
+	{
+		Func_Var_4 = Func_Var_4 + 65536;
+	}
+	while( Func_Var_4 >= 32768 )
+	{
+		Func_Var_4 = Func_Var_4 - 65536;
+	}
+	if( Func_Var_4 < 0 )
+	{
+		Func_Var_4 = 0 - Func_Var_4;
+	}
+	if( Func_Var_4 >= 16384 )
+	{
+		Func_Var_2 = get ATAN(get PIECE_Y(Leg5-0) - get PIECE_Y(Stride5),get XZ_HYPOT(get PIECE_XZ(Leg5-0) - get PIECE_XZ(Stride5))) + Func_Var_6 - 32768;
+	}
+	if( Func_Var_4 < 16384 )
+	{
+		Func_Var_2 = get ATAN(get PIECE_Y(Leg5-0) - get PIECE_Y(Stride5),get XZ_HYPOT(get PIECE_XZ(Leg5-0) - get PIECE_XZ(Stride5))) - Func_Var_6;
+	}
+	turn Leg5-0 to x-axis Func_Var_2 now;
+	Static_Var_48 = Func_Var_1;
+	Static_Var_49 = Func_Var_2;
+	Static_Var_50 = Func_Var_5;
+	Func_Var_1 = get XZ_ATAN(get PIECE_XZ(Leg6-0) - get PIECE_XZ(Stride6));
+	turn Leg6-0 to y-axis Func_Var_1 now;
+	Func_Var_7 = 0;
+	Func_Var_8 = 16384;
+	Func_Var_3 = get HYPOT(get PIECE_Y(Leg6-0) - get PIECE_Y(Stride6),get XZ_HYPOT(get PIECE_XZ(Leg6-0) - get PIECE_XZ(Stride6)));
+	while( Func_Var_8 != 0 )
+	{
+		Func_Var_5 = Func_Var_7 + Func_Var_8;
+		turn Leg6-2 to x-axis Func_Var_5 now;
+		turn Leg6-3 to x-axis Func_Var_5 now;
+		turn Leg6-4 to x-axis Func_Var_5 * <0.005495> / <0.010989> now;
+		if( get HYPOT(get PIECE_Y(Leg6-0) - get PIECE_Y(End6),get XZ_HYPOT(get PIECE_XZ(Leg6-0) - get PIECE_XZ(End6))) > Func_Var_3 )
+		{
+			Func_Var_7 = Func_Var_7 + Func_Var_8;
+		}
+		Func_Var_8 = Func_Var_8 / 2;
+	}
+	turn Leg6-0 to x-axis <0.000000> now;
+	Func_Var_6 = get ATAN(get PIECE_Y(Leg6-0) - get PIECE_Y(End6),get XZ_HYPOT(get PIECE_XZ(Leg6-0) - get PIECE_XZ(End6)));
+	Func_Var_4 = get XZ_ATAN(get PIECE_XZ(End6) - get PIECE_XZ(Leg6-0)) - get XZ_ATAN(get PIECE_XZ(Stride6) - get PIECE_XZ(Leg6-0));
+	while( Func_Var_4 < 0 )
+	{
+		Func_Var_4 = Func_Var_4 + 65536;
+	}
+	while( Func_Var_4 >= 32768 )
+	{
+		Func_Var_4 = Func_Var_4 - 65536;
+	}
+	if( Func_Var_4 < 0 )
+	{
+		Func_Var_4 = 0 - Func_Var_4;
+	}
+	if( Func_Var_4 >= 16384 )
+	{
+		Func_Var_2 = get ATAN(get PIECE_Y(Leg6-0) - get PIECE_Y(Stride6),get XZ_HYPOT(get PIECE_XZ(Leg6-0) - get PIECE_XZ(Stride6))) + Func_Var_6 - 32768;
+	}
+	if( Func_Var_4 < 16384 )
+	{
+		Func_Var_2 = get ATAN(get PIECE_Y(Leg6-0) - get PIECE_Y(Stride6),get XZ_HYPOT(get PIECE_XZ(Leg6-0) - get PIECE_XZ(Stride6))) - Func_Var_6;
+	}
+	turn Leg6-0 to x-axis Func_Var_2 now;
+	Static_Var_51 = Func_Var_1;
+	Static_Var_52 = Func_Var_2;
+	Static_Var_53 = Func_Var_5;
+	Static_Var_33 = 0;
+	hide glow2;
+	hide emg1;
+	hide emg2;
+	hide Leg3-1;
+	hide Leg3-2;
+	hide Leg3-3;
+	hide Foot3;
+	hide Leg4-1;
+	hide Leg4-2;
+	hide Leg4-3;
+	hide Foot4;
+	var Func_Var_10, Func_Var_11, Func_Var_12, Func_Var_13, Func_Var_14, Func_Var_15, Func_Var_16;
+	Func_Var_16 = get UNKNOWN_UNIT_VALUE(69);
+	Func_Var_15 = get UNKNOWN_UNIT_VALUE(70);
+	Static_Var_35 = get UNKNOWN_UNIT_VALUE(71);
+	Static_Var_34 = get UNKNOWN_UNIT_VALUE(72)(get UNKNOWN_UNIT_VALUE(71));
+	Func_Var_13 = Func_Var_16;
+	while( Func_Var_13 <= Func_Var_15 )
+	{
+		if( get UNKNOWN_UNIT_VALUE(72)(Func_Var_13) == Static_Var_34 )
+		{
+			if( get UNIT_HEIGHT(Func_Var_13) == [6.900000] )
+			{
+				if( get UNKNOWN_UNIT_VALUE(73)(Func_Var_13) == 0 )
+				{
+					Func_Var_10 = get UNIT_XZ(Func_Var_13) - get PIECE_XZ(base);
+					if( Func_Var_10 < 0 )
+					{
+						Func_Var_10 = 0 - Func_Var_10;
+					}
+					Func_Var_11 = Func_Var_10 / 65536;
+					Func_Var_12 = Func_Var_10 - Func_Var_11 * 65536;
+					if( Func_Var_12 > 32767 )
+					{
+						Func_Var_12 = 65536 - Func_Var_12;
+						Func_Var_11 = Func_Var_11 + ( Func_Var_10 > 0 );
+					}
+					if( [4317.218750] < get XZ_HYPOT(Func_Var_11 / 2 * 65536 + Func_Var_12 / 2) )
+					{
+						Func_Var_10 = [3053.791602];
+					}
+					Func_Var_14 = get XZ_HYPOT(Func_Var_10);
+					if( Func_Var_14 <= [35.000000] )
+					{
+						Static_Var_9 = 0;
+						Static_Var_33 = 1;
+						hide glow;
+						show glow2;
+						show Leg3-1;
+						show Leg3-2;
+						show Leg3-3;
+						show Foot3;
+						show Leg4-1;
+						show Leg4-2;
+						show Leg4-3;
+						show Foot4;
+					}
+				}
+			}
+		}
+		++Func_Var_13;
+	}
+	while( get BUILD_PERCENT_LEFT )
+	{
+		sleep 1000;
+	}
+	start-script PositionLegs();
+	start-script LegGroups();
+	start-script SmokeUnit();
+}
+
+Activate()
+{
+	if( !Static_Var_33 )
+	{
+		cache glow;
+	}
+	if( Static_Var_33 )
+	{
+		cache glow2;
+	}
+	if( !gun_1 )
+	{
+		dont-cache glow;
+		dont-cache glow2;
+	}
+}
+
+Deactivate()
+{
+	cache glow;
+	cache glow2;
+}
+
+AimSecondary()
+{
+	signal SIG_AIM_2;
+	set-signal-mask SIG_AIM_2;
+	while( !get 1 OR gun_1 )
+	{
+		sleep 50;
+	}
+	bAiming = TRUE;
+	return (1);
+}
+
+FireSecondary()
+{
+	if( !Static_Var_33 )
+	{
+		cache glow;
+	}
+	if( Static_Var_33 )
+	{
+		cache glow2;
+	}
+	explode firepoint type BITMAPONLY | BITMAP5;
+	if( get ACTIVATION )
+	{
+		dont-cache glow;
+		dont-cache glow2;
+	}
+}
+
+QuerySecondary(piecenum)
+{
+	piecenum = firepoint;
+}
+
+AimFromSecondary(piecenum)
+{
+	piecenum = base;
+}
+
+AimPrimary(heading, pitch)
+{
+	signal SIG_AIM;
+	set-signal-mask SIG_AIM;
+	turn brawl to y-axis heading speed <900.000000>;
+	wait-for-turn brawl around y-axis;
+	while( gun_1 )
+	{
+		sleep 50;
+	}
+	bAiming = TRUE;
+	return (1);
+}
+
+FirePrimary()
+{
+	if( Static_Var_3 == 0 )
+	{
+		gun_1 = emg2;
+		sleep Static_Var_9;
+		gun_1 = emg1;
+	}
+	if( Static_Var_3 == 1 )
+	{
+		gun_1 = emg2;
+		sleep Static_Var_9;
+		gun_1 = emg1;
+	}
+	++Static_Var_3;
+	if( Static_Var_3 >= 2 )
+	{
+		Static_Var_3 = 0;
+	}
+}
+
+QueryPrimary(piecenum)
+{
+	if( Static_Var_3 == 0 )
+	{
+		piecenum = emg1;
+	}
+	if( Static_Var_3 == 1 )
+	{
+		piecenum = emg2;
+	}
+}
+
+AimFromPrimary(piecenum)
+{
+	piecenum = brawl;
+}
+
+AimTertiary(heading, pitch)
+{
+	signal SIG_AIM_3;
+	set-signal-mask SIG_AIM_3;
+	bAiming = TRUE;
+	return (1);
+}
+
+FireTertiary()
+{
+}
+
+AimFromTertiary(piecenum)
+{
+	piecenum = Crush_Arm;
+}
+
+QueryTertiary(piecenum)
+{
+	piecenum = Crush_Arm;
+}
+
+SweetSpot(piecenum)
+{
+	piecenum = base;
+}
+
+Killed(severity, corpsetype)
+{
+	var Func_Var_3, Func_Var_4;
+	if( severity <= 25 )
+	{
+		corpsetype = 2 - ( 0 == Rand( 0, 1 ) );
+		explode body type BITMAPONLY | BITMAP1;
+		return (0);
+	}
+	if( severity <= 50 )
+	{
+		corpsetype = 2;
+		explode body type BITMAPONLY | BITMAP1;
+		return (0);
+	}
+	if( severity <= 99 )
+	{
+		corpsetype = 3;
+		explode body type BITMAPONLY | BITMAP1;
+		return (0);
+	}
+	corpsetype = 3;
+	explode body type BITMAPONLY | BITMAP1;
+}
