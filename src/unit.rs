@@ -28,7 +28,7 @@ pub fn unit_page(props: &UnitPageProps) -> Html {
     if let Some(unit) = unit {
         set_title(format!("TA:ESC Units | {}", unit.name).as_str());
 
-        let img_url = format!("/data/unit_icons/{}.webp", unit.object_name.clone());
+        let img_url = format!("/data/unit_icons/{}.webp", unit.unit_name.clone());
 
         html! {
             <>
@@ -98,6 +98,12 @@ pub fn unit_page(props: &UnitPageProps) -> Html {
                         <p>{ format!("Sight distance: {}", unit.sight_distance) }</p>
                         <p>{ format!("Radar distance: {}", unit.radar_distance) }</p>
                         <p>{ format!("Radar Jam distance: {}", unit.radar_distance_jam) }</p>
+                        if unit.worker_time > 0 {
+                            <p>{ format!("Build power: {}", unit.worker_time) }</p>
+                        }
+                        if unit.max_slope > 0 {
+                            <p>{ format!("Max slope: {}", unit.max_slope) }</p>
+                        }
                     </div>
                 </div>
 

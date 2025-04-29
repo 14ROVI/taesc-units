@@ -6,7 +6,6 @@ class Token:
     STRING = 5
     INT = 6
     EQUALS = 7
-    SEMICOLON = 8
     COMMENT = 9
     START_MULTILINE_COMMENT = 10
     END_MULTILINE_COMMENT = 11
@@ -27,7 +26,6 @@ class Token:
             Token.R_C_BRACKET: "}",
             Token.L_C_BRACKET: "{",
             Token.EQUALS: "=",
-            Token.SEMICOLON: ";",
             Token.NEWLINE: ";"
         }
         
@@ -35,28 +33,6 @@ class Token:
             return token_map[self.type]
         else:
             return str(self.value)
-
-
-def remove_comments(raw: str) -> str:
-    cursor = 0
-    
-    while cursor < len(raw):
-        cur_start = cursor
-        
-        if raw[cursor:cursor+2] == "//":
-            while raw[cursor:cursor+1] != "\n":
-                cursor += 1
-            raw = raw[:cur_start] + raw[cursor:]
-            cursor = cur_start
-        elif raw[cursor:cursor+2] == "/*":
-            while raw[cursor:cursor+2] != "*/":
-                cursor += 1
-            raw = raw[:cur_start] + raw[cursor+2:]
-            cursor = cur_start
-        else:
-            cursor += 1
-            
-    return raw
             
         
 
@@ -67,9 +43,8 @@ def tokenise(raw: str) -> list:
     
     while cursor < len(raw):
         cur_start_point = cursor
-        char = raw[cursor]
         
-        if char == "[":
+        if raw[cursor] == "[":
             tokens.append(Token(Token.L_S_BRACKET, None))
             cursor += 1
             while raw[cursor] != "]":
@@ -77,26 +52,26 @@ def tokenise(raw: str) -> list:
             tokens.append(Token(Token.STRING, raw[cur_start_point+1:cursor]))
             tokens.append(Token(Token.R_S_BRACKET, None))
             cursor += 1
-        elif char == "{":
+        elif raw[cursor] == "{":
             tokens.append(Token(Token.L_C_BRACKET, None))
             cursor += 1
-        elif char == "}":
+        elif raw[cursor] == "}":
             tokens.append(Token(Token.R_C_BRACKET, None))
             cursor += 1
-        elif char == "=":
+        elif raw[cursor] == "=":
             tokens.append(Token(Token.EQUALS, None))
             cursor += 1
-        elif char == ";":
-            tokens.append(Token(Token.SEMICOLON, None))
+        elif raw[cursor] in ";\n\r":
+            tokens.append(Token(Token.NEWLINE, None))
             cursor += 1
-        elif char == "/" and raw[cursor + 1] == "/":
-            while raw[cursor] != "\n":
+        elif raw[cursor:cursor+2] == "//":
+            while raw[cursor] not in "\n\r":
                 cursor += 1
-        elif char == "/" and raw[cursor + 1] == "*":
+        elif raw[cursor:cursor+2] == "/*":
             while raw[cursor:cursor+2] != "*/":
                 cursor += 1
             cursor += 2
-        elif char in "\n\t ":
+        elif raw[cursor] in "\t ":
             cursor += 1
         else:
             while raw[cursor] not in "{}[]=;" and raw[cursor:cursor+2] not in {"//", "/*"}:
@@ -116,29 +91,30 @@ def tokenise(raw: str) -> list:
 def parse(tokens: list[Token]) -> dict:
     data = {}
     cursor = 0
-    cur_start_point = 0
     
     while cursor < len(tokens):
-        cur_start_point = cursor
         token = tokens[cursor]
         
-        if token.type == Token.L_S_BRACKET:
+        if token.type == Token.L_S_BRACKET: # start of object
             key = tokens[cursor+1].value
-            cursor += 4
-            indent = 1
-            while indent > 0:
+            indent = 0
+            child_start = 0
+            while indent > 0 or child_start == 0:
                 if tokens[cursor].type == Token.L_C_BRACKET:
+                    if child_start == 0:
+                        child_start = cursor
                     indent += 1
                 elif tokens[cursor].type == Token.R_C_BRACKET:
                     indent -= 1
                 cursor += 1
-            data[key] = parse(tokens[cur_start_point+4:cursor-1])
+            data[key] = parse(tokens[child_start+1:cursor-1])
+        elif token.type == Token.NEWLINE:
+            cursor += 1
         else:
             key = tokens[cursor].value
             cursor += 2
-            if tokens[cursor].type != Token.SEMICOLON:
+            if tokens[cursor].type != Token.NEWLINE:
                 data[key] = tokens[cursor].value
-                cursor += 1
             else:
                 data[key] = None
             cursor += 1
@@ -147,7 +123,5 @@ def parse(tokens: list[Token]) -> dict:
 
         
 def decode(raw: str) -> dict:
-    raw = raw.replace("\r\n", "\n").replace("\r", "\n")
-    comment_less = remove_comments(raw)
-    tokens = tokenise(comment_less)
+    tokens = tokenise(raw)
     return parse(tokens)

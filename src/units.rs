@@ -188,7 +188,7 @@ pub struct UnitOverviewProps {
 #[function_component(UnitOverview)]
 pub fn unit(props: &UnitOverviewProps) -> Html {
     let name = props.unit.name.clone();
-    let img_url = format!("/data/unit_icons/{}.webp", props.unit.object_name.clone());
+    let img_url = format!("/data/unit_icons/{}.webp", props.unit.unit_name.clone());
     html! {
         <Link<Route> to={Route::Unit{unit_name: props.unit.unit_name.clone()}}>
             <div class="unit">

@@ -7,6 +7,7 @@ import json
 import platform
 import time
 from chardet import detect
+import requests
 import ta_file_decoder
 import cob_interpreter
 
@@ -27,11 +28,12 @@ EXTRACT_UNITS_DIR = "./out/unitsE/"
 EXTRACT_UNIT_PICS_DIR = "./out/unitpicE/"
 EXTRACT_SCRIPTS_PATH = "./out/scripts/"
 EXTRACT_GUIS_DIR = "./out/guiE/"
-UNIT_PICS_DIR = "./data/unit_icons/"
-UNIT_DATA_PATH = "./data/units.json"
-WEAPON_DATA_PATH = "./data/weapons.json"
-GUIS_DATA_PATH = "./data/guis.json"
-META_DATA_PATH = "./data/meta.json"
+EXTRACT_DESTINATION = "./dist/data/"
+UNIT_PICS_DIR = EXTRACT_DESTINATION+"unit_icons/"
+UNIT_DATA_PATH = EXTRACT_DESTINATION+"units.json"
+WEAPON_DATA_PATH = EXTRACT_DESTINATION+"weapons.json"
+GUIS_DATA_PATH = EXTRACT_DESTINATION+"guis.json"
+META_DATA_PATH = EXTRACT_DESTINATION+"meta.json"
 
 CLASS_REGEX = re.compile(r"\[(\w+)\]")
 DATA_REGEX = re.compile(r"(\w*)=([^;]*);")
@@ -46,7 +48,7 @@ WEAPON_DATA_EXCLUDE_KEYS = {
 }
 WEAPON_DATA_LIST_KEYS = {}
 EXCLUDE_UNITS = {
-    "GOKT3SUPRPOD"
+    "GOKT3SUPRPOD", "ZZZ",
 }
 EXCLUDE_WEAPONS = {}
 UNIT_DATA = {}
@@ -74,9 +76,8 @@ def fbi_data(file_path):
         encoding = detect(rawdata)["encoding"]
         if encoding is None: return data
         text = rawdata.decode(encoding=encoding)
-        print(file_path)
         data = ta_file_decoder.decode(text)
-
+        
         data = {
             k.lower(): v for k, v in data["UNITINFO"].items()
         }
@@ -90,7 +91,7 @@ def tdf_data(file_path):
     
     with open(file_path, "rb") as f:
         rawdata = f.read()
-        encoding = detect(rawdata)["encoding"]
+        encoding = detect(rawdata)["encoding"] or "utf-8"
         if encoding is None: return data
         text = rawdata.decode(encoding=encoding)
         data = ta_file_decoder.decode(text)
@@ -108,6 +109,7 @@ def gui_data(file_path):
     with open(file_path, "rb") as f:
         rawdata = f.read()
         encoding = detect(rawdata)["encoding"]
+        if encoding is None: return data
         
         text = rawdata.decode(encoding=encoding)
         gui_data = ta_file_decoder.decode(text)
@@ -147,7 +149,9 @@ subprocess.run(["git", "clone", "--depth", "1", ESC_GIT_REPO, ESC_GIT_DIR])
 shutil.rmtree(EXTRACT_DIR, ignore_errors=True)
 # shutil.rmtree(UNIT_PICS_DIR, ignore_errors=True)
 
-os.makedirs(UNIT_PICS_DIR)
+    if not path.exists(EXTRACT_DESTINATION):
+        os.makedirs(EXTRACT_DESTINATION)
+    os.makedirs(UNIT_PICS_DIR)
 
 
 for file in os.listdir(ESC_GIT_DIR):
@@ -224,74 +228,74 @@ for file in os.listdir(ESC_GIT_DIR):
     shutil.rmtree(EXTRACT_DIR, ignore_errors=True)
 
 
-for gui in GUI_DATA:
-    data = []
-    for page in GUI_DATA[gui]:
-        data.extend(GUI_DATA[gui][page])
-    GUI_DATA[gui] = data
+    for gui in GUI_DATA:
+        data = []
+        for page in GUI_DATA[gui]:
+            data.extend(GUI_DATA[gui][page])
+        GUI_DATA[gui] = data
 
-BUILT_BY_DATA = {}
+    BUILT_BY_DATA = {}
 
-for gui in GUI_DATA:
-    for unit in GUI_DATA[gui]:
-        if unit in BUILT_BY_DATA:
-            BUILT_BY_DATA[unit].append(gui)
-        else:
-            BUILT_BY_DATA[unit] = [gui]
-            
-for unit_name in UNIT_DATA:
-    unit = UNIT_DATA[unit_name]
-    unit["category"] = unit["category"].strip().split()
-    if "yardmap" in unit:
-        unit["yardmap"] = unit["yardmap"].strip().split()
-    unit["builtby"] = BUILT_BY_DATA.get(unit_name, [])
-    unit["builds"] = GUI_DATA.get(unit_name, [])
-    
-    for category in unit["category"]:
-        if category.startswith("LEV"):
-            unit["tier"] = int(category[-1])
-            break
+    for gui in GUI_DATA:
+        for unit in GUI_DATA[gui]:
+            if unit in BUILT_BY_DATA:
+                BUILT_BY_DATA[unit].append(gui)
+            else:
+                BUILT_BY_DATA[unit] = [gui]
+                
+    for unit_name in UNIT_DATA:
+        unit = UNIT_DATA[unit_name]
+        unit["category"] = unit["category"].strip().split()
+        if "yardmap" in unit:
+            unit["yardmap"] = unit["yardmap"].strip().split()
+        unit["builtby"] = BUILT_BY_DATA.get(unit_name, [])
+        unit["builds"] = GUI_DATA.get(unit_name, [])
+        
+        for category in unit["category"]:
+            if category.startswith("LEV"):
+                unit["tier"] = int(category[-1])
+                break
 
 
-constructor_map = {
-    "kbot": "KBOT",
-    "vehicle": "VEHICLE",
-    "ship": "SHIP",
-    "sub": "SHIP",
-    "hovercraft": "HOVERCRAFT",
-    "aircraft": "AIRCRAFT",
-    "seaplane": "AIRCRAFT"
-}
+    constructor_map = {
+        "kbot": "KBOT",
+        "vehicle": "VEHICLE",
+        "ship": "SHIP",
+        "sub": "SHIP",
+        "hovercraft": "HOVERCRAFT",
+        "aircraft": "AIRCRAFT",
+        "seaplane": "AIRCRAFT"
+    }
 
-def is_troop(unit):
-    for builder in unit["builtby"]:
-        if builder["tedclass"] == "PLANT":
-            return True
-    return False
+    def is_troop(unit):
+        for builder in unit["builtby"]:
+            if builder["tedclass"] == "PLANT":
+                return True
+        return False
 
-def is_constructor(unit):
-    return (
-        unit["tedclass"] == "CNSTR"
-        and (
-            "construction" in unit["name"].lower()
-            or "mobile factory" in unit["name"].lower()
-            or "builder" in unit["name"].lower()
-        ))
+    def is_constructor(unit):
+        return (
+            unit["tedclass"] == "CNSTR"
+            and (
+                "construction" in unit["name"].lower()
+                or "mobile factory" in unit["name"].lower()
+                or "builder" in unit["name"].lower()
+            ))
 
-def get_constructor_type(unit):
-    constructor_type = unit["name"].split()[-1]
-    return constructor_map[constructor_type.lower()]
+    def get_constructor_type(unit):
+        constructor_type = unit["name"].split()[-1]
+        return constructor_map[constructor_type.lower()]
 
-def find_troop_type(unit):
-    for plant_name in unit["builtby"]:
-        plant = UNIT_DATA[plant_name]
-        if plant["tedclass"] == "PLANT":
-            for constructor_name in plant["builds"]:
-                constructor = UNIT_DATA[constructor_name]
-                if is_constructor(constructor):
-                    return get_constructor_type(constructor)
-    return "OTHER"
-    
+    def find_troop_type(unit):
+        for plant_name in unit["builtby"]:
+            plant = UNIT_DATA[plant_name]
+            if plant["tedclass"] == "PLANT":
+                for constructor_name in plant["builds"]:
+                    constructor = UNIT_DATA[constructor_name]
+                    if is_constructor(constructor):
+                        return get_constructor_type(constructor)
+        return "OTHER"
+        
 
 for unit_name in UNIT_DATA:
     unit = UNIT_DATA[unit_name]
@@ -350,8 +354,8 @@ for unit_name in UNIT_DATA:
     
 
 
-with open(UNIT_DATA_PATH, "w") as f:
-    json.dump(UNIT_DATA, f, indent=4)
+    with open(UNIT_DATA_PATH, "w") as f:
+        json.dump(UNIT_DATA, f, indent=4)
 
 with open(WEAPON_DATA_PATH, "w") as f:
     json.dump(WEAPON_DATA, f, indent=4)
