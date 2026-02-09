@@ -31,20 +31,6 @@ pub fn set_title(title: &str) {
         .inspect(|d| d.set_title(title));
 }
 
-#[function_component(NavBar)]
-pub fn nav_bar() -> Html {
-    html! {
-        <nav>
-            <Link<Route> to={Route::Home}>{ "Home" }</Link<Route>>
-            <Link<Route> to={Route::Units}>{ "Units" }</Link<Route>>
-            <Link<Route> to={Route::Mirrors}>{ "Mirrors" }</Link<Route>>
-            <a href="https://github.com/14ROVI/taesc-units" style="margin-left: auto;">
-                { "This website's GitHub" }
-            </a>
-        </nav>
-    }
-}
-
 #[function_component(Home)]
 pub fn home() -> Html {
     set_title("TA:ESC Units | Home");
@@ -89,15 +75,40 @@ pub fn mirrors() -> Html {
     }
 }
 
+#[function_component(NotFound)]
+pub fn not_found() -> Html {
+    html! {
+        <>
+            <h1>{ "Not found" }</h1>
+            <p>{ "Oops, it looks like you visited an incorrect url!" }</p>
+        </>
+    }
+}
+
+#[function_component(NavBar)]
+pub fn nav_bar() -> Html {
+    html! {
+        <nav>
+            // <Link<Route> to={Route::Home}>{ "Home" }</Link<Route>>
+            <Link<Route> to={Route::Units}>{ "Units" }</Link<Route>>
+            <Link<Route> to={Route::Mirrors}>{ "Mirrors" }</Link<Route>>
+            <a href="https://github.com/14ROVI/taesc-units">
+                { "GitHub" }
+            </a>
+        </nav>
+    }
+}
+
 fn switch(routes: Route) -> Html {
     web_sys::window().inspect(|w| w.scroll_to_with_x_and_y(0.0, 0.0));
 
     match routes {
-        Route::Home => html! { <Home/> },
+        // Route::Home => html! { <Home/> },
+        Route::Home => html! { <Units/> },
         Route::Units => html! { <Units/> },
         Route::Unit { unit_name } => html! { <UnitPage unit_name={unit_name}/> },
         Route::Mirrors => html! { <Mirrors/> },
-        Route::NotFound => html! { <h1>{ "404" }</h1> },
+        Route::NotFound => html! { <NotFound/> },
     }
 }
 

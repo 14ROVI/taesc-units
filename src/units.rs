@@ -19,6 +19,14 @@ const CLASSES: [&'static str; 9] = [
     "BUILDING",
 ];
 
+fn title_case(s: &str) -> String {
+    let mut c = s.chars();
+    match c.next() {
+        None => String::new(),
+        Some(f) => f.to_uppercase().collect::<String>() + c.as_str().to_lowercase().as_str(),
+    }
+}
+
 #[function_component(Units)]
 pub fn units() -> Html {
     let esc_data = use_context::<EscDataCtx>().expect("no ctx found");
@@ -57,7 +65,7 @@ pub fn units() -> Html {
 
     html! {
         <>
-            <h1>{ "Units" }</h1>
+            // <h1>{ "Units" }</h1>
             <div class="units-container">
             <div class="units-sidebar-container">
                 <div class="units-sidebar-scroll-container">
@@ -86,7 +94,7 @@ pub fn units() -> Html {
                                                     })
                                                     .map(|class| {
                                                     html! {
-                                                        <a href={format!("#tier-{}-{}", i, class)}>{ format!("{}", class) }</a>
+                                                        <a href={format!("#tier-{}-{}", i, class)}>{ format!("{}", title_case(class)) }</a>
                                                     }
                                                 }).collect::<Html>()
                                             }
@@ -171,7 +179,11 @@ pub fn class(props: &ClassProps) -> Html {
                         let key = unit.object_name.clone();
 
                         html! {
-                            <UnitOverview key={key} unit={unit.clone()}/>
+                            <UnitOverview
+                                key={key}
+                                unit_id={unit.unit_name}
+                                unit_name={unit.name}
+                            />
                         }
                     }).collect::<Html>()
                 }
@@ -182,18 +194,21 @@ pub fn class(props: &ClassProps) -> Html {
 
 #[derive(Properties, PartialEq)]
 pub struct UnitOverviewProps {
-    pub unit: Unit,
+    unit_id: AttrValue,
+    unit_name: AttrValue,
 }
 
 #[function_component(UnitOverview)]
 pub fn unit(props: &UnitOverviewProps) -> Html {
-    let name = props.unit.name.clone();
-    let img_url = format!("/data/unit_icons/{}.webp", props.unit.unit_name.clone());
+    let unit_id = props.unit_id.clone().to_string();
+    let unit_name = props.unit_name.clone();
+    let unit_image_url = format!("/data/unit_icons/{}.webp", &unit_id);
+
     html! {
-        <Link<Route> to={Route::Unit{unit_name: props.unit.unit_name.clone()}}>
+        <Link<Route> to={Route::Unit{unit_name: unit_id}}>
             <div class="unit">
-                <span>{name}</span>
-                <img src={img_url}/>
+                <img src={unit_image_url}/>
+                <span>{unit_name}</span>
             </div>
         </Link<Route>>
     }
