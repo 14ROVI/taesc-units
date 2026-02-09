@@ -57,20 +57,28 @@ pub fn mirrors() -> Html {
     html! {
         <>
             <h1>{ "Mirrors" }</h1>
+            <h2>{ "10.0.0" }</h2>
+            <ul>
+                <li><a href="/data/mirrors/ESC_1000_FULL.rar">{ "ESC_1000_FULL.rar" }</a>{ " " }<span>{ "(342MB)" }</span></li>
+            </ul>
             <h2>{ "9.9.9" }</h2>
-            <li><a href="/data/mirrors/ESC_999_FULL.zip">{ "ESC_999_FULL.zip" }</a>{ " " }<span>{ "(323MB)" }</span></li>
-            <li><a href="/data/mirrors/ESC_999_FULL.rar">{ "ESC_999_FULL.rar" }</a>{ " " }<span>{ "(315MB)" }</span></li>
-            <br/>
+            <ul>
+                <li><a href="/data/mirrors/ESC_999_FULL.zip">{ "ESC_999_FULL.zip" }</a>{ " " }<span>{ "(323MB)" }</span></li>
+                <li><a href="/data/mirrors/ESC_999_FULL.rar">{ "ESC_999_FULL.rar" }</a>{ " " }<span>{ "(315MB)" }</span></li>
+            </ul>
             <h2>{ "9.9.8" }</h2>
-            <li><a href="/data/mirrors/ESC_998_FULL.zip">{ "ESC_998_FULL.zip" }</a>{ " " }<span>{ "(318MB)" }</span></li>
-            <li><a href="/data/mirrors/ESC_998_FULL.rar">{ "ESC_998_FULL.rar" }</a>{ " " }<span>{ "(310MB)" }</span></li>
-            <br/>
+            <ul>
+                <li><a href="/data/mirrors/ESC_998_FULL.zip">{ "ESC_998_FULL.zip" }</a>{ " " }<span>{ "(318MB)" }</span></li>
+                <li><a href="/data/mirrors/ESC_998_FULL.rar">{ "ESC_998_FULL.rar" }</a>{ " " }<span>{ "(310MB)" }</span></li>
+            </ul>
             <h2>{ "9.9.7" }</h2>
-            <li><a href="/data/mirrors/ESC_997_FULL.zip">{ "ESC_997_FULL.zip" }</a>{ " " }<span>{ "(321MB)" }</span></li>
-            <li><a href="/data/mirrors/ESC_997_FULL.rar">{ "ESC_997_FULL.rar" }</a>{ " " }<span>{ "(310MB)" }</span></li>
-            <br/>
-            <li><a href="/data/mirrors/ESC_997_FAST.zip">{ "ESC_997_FAST.zip" }</a>{ " " }<span>{ "(53MB)" }</span></li>
-            <li><a href="/data/mirrors/ESC_997_FAST.rar">{ "ESC_997_FAST.rar" }</a>{ " " }<span>{ "(43MB)" }</span></li>
+            <ul>
+                <li><a href="/data/mirrors/ESC_997_FULL.zip">{ "ESC_997_FULL.zip" }</a>{ " " }<span>{ "(321MB)" }</span></li>
+                <li><a href="/data/mirrors/ESC_997_FULL.rar">{ "ESC_997_FULL.rar" }</a>{ " " }<span>{ "(310MB)" }</span></li>
+                <br/>
+                <li><a href="/data/mirrors/ESC_997_FAST.zip">{ "ESC_997_FAST.zip" }</a>{ " " }<span>{ "(53MB)" }</span></li>
+                <li><a href="/data/mirrors/ESC_997_FAST.rar">{ "ESC_997_FAST.rar" }</a>{ " " }<span>{ "(43MB)" }</span></li>
+            </ul>
         </>
     }
 }
