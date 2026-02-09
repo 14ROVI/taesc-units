@@ -193,8 +193,16 @@ class System:
             19: lambda: self.bugger_off,
             20: lambda: self.armoured,
             
-            # 69: lambda: 2,
-            # 70: lambda: 2,
+            # 21: WEAPON_AIM_ABORTED
+            
+            32: lambda: 0, # base vetran level
+            
+            69: lambda: 1,
+            70: lambda: 500,
+            71: lambda: 1, # we are always the only unit in the sim
+            72: lambda unit_id, _: 1, # returns player id of unit given with parameter (we are always id 1)
+            73: lambda param, _: 0, # built
+            74: lambda unit_id, _: 1, # always allied
         }
         
         self.static_vars = {}
@@ -291,10 +299,10 @@ class Interpreter:
         self.meta: InterpreterMeta = meta
         self.header: Header = meta.header
         self.data: bytes = data
-        self.script: str = None
+        self.script: str | None = None
         self.sleep_duration: int = 0
         self.cursor: int = 0
-        self.signal_mask: int = 0
+        self.signal_mask: int | None = None
         self.killed: bool = False
         self.stack: List[int] = []
         self.local_vars: List[int] = []
@@ -616,7 +624,7 @@ class Interpreter:
         else:
             raise Exception(f"opcode {opcode} not found in opcode dict")
         
-    def run(self) -> int:
+    def run(self) -> int | None:
         if self.sleep_duration is not None and self.sleep_duration > 0:
             self.state = "sleeping"
             return None
@@ -826,26 +834,29 @@ def calculate_reload_speed(script_bytes: bytes, weapon: str, min_reload: int, in
 if __name__ == "__main__":
     def do_all():
         import os
-        directory = "out/scripts/"
+        directory = "extract/scripts/"
         for f in os.listdir(directory):
             if f.lower().endswith(".cob"):
                 with open(f"{directory}{f}", mode="rb") as file:
                     data = file.read()
 
                     try:
-                        reload_speed = calculate_reload_speed(data, "primary", 400)
+                        print(f"{f} Reload speed: ", end="")
+                        reload_speed = calculate_reload_speed(data, "primary", 400, False)
                         if reload_speed is not None:
-                            print(f"{f} Reload speed: {reload_speed}ms")
-                    except:
-                        print(f"no reload speed for {f}")
+                            print(f"{reload_speed}ms")
+                        else:
+                            print("")
+                    except Exception as e:
+                        print(f"no reload speed for {f} {e}")
                     
     def do(unit_name, weapon, rs, water):
-        # logging.basicConfig(level=logging.INFO, format=('%(filename)s: '    
-        #                         '%(levelname)s: '
-        #                         '%(funcName)s(): '
-        #                         '%(lineno)d:\t'
-        #                         '%(message)s')
-        #                 )
+        logging.basicConfig(level=logging.INFO, format=('%(filename)s: '    
+                                '%(levelname)s: '
+                                '%(funcName)s(): '
+                                '%(lineno)d:\t'
+                                '%(message)s')
+                        )
         
         with open(f"{unit_name}", mode="rb") as file:
             data = file.read()
@@ -853,8 +864,11 @@ if __name__ == "__main__":
             reload_speed = calculate_reload_speed(data, weapon, rs, water)
             print(f"{unit_name} Reload speed: {reload_speed}ms")
 
-    # do_all()
-    do("extracted_files/t3esc/scripts/ARMASPID.cob", "primary", 400, False)
+    #do_all()
+    #do("extract/scripts/ARMTHUND.cob", "primary", 100, False)
+    #do("extract/scripts/ARMEMP.cob", "primary", 100, False)
+    do("extracted_files/totala1/scripts/ARMSILO.cob", "primary", 300, False)
+    
     
 
 

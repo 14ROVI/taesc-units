@@ -176,7 +176,7 @@ for file in os.listdir(ESC_GIT_DIR):
         
     if path.exists(EXTRACT_UNITS_DIR):
         for unit in os.listdir(EXTRACT_UNITS_DIR):
-            if any(unit.startswith(name) for name in EXCLUDE_UNITS):
+            if any(unit.upper().startswith(name) for name in EXCLUDE_UNITS):
                 continue
                     
             unit_path = path.join(EXTRACT_UNITS_DIR, unit)
